@@ -2,11 +2,7 @@
   "name": "files-to-prompt-ts",
   "module": "files-to-prompt.ts",
   "devDependencies": {
-    "@types/bun": "latest",
-    "@types/chai": "^4.3.14",
-    "@types/mocha": "^10.0.6",
-    "chai": "^5.1.0",
-    "mocha": "^10.4.0"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -14,5 +10,8 @@
   "type": "module",
   "dependencies": {
     "commander": "^12.0.0"
-  }
+  },
+  "scripts": {
+    "test": "bun test ./files-to-prompt.test.ts"
+}
 }
