@@ -4,31 +4,21 @@ import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
 
-function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
- return new Promise((resolve, reject) => {
-    const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
-    let isBinary = false;
+async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
+  const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
+  let isBinary = false;
 
-    stream.on('data', (chunk) => {
-      for (let i = 0; i < chunk.length; i++) {
-        if (Buffer.isBuffer(chunk)) {
-          if (chunk.some((byte) => byte > 127)) { // Check for non-ASCII character
-            isBinary = true;
-            stream.destroy(); // Stop reading the file
-            break;
-          } 
-        }
-      }
-    });
+  for await (const chunk of stream) {
+    if (Buffer.isBuffer(chunk)) {
+      if (chunk.some((byte) => byte > 127)) { // Check for non-ASCII character
+        isBinary = true;
+        stream.destroy(); // Stop reading the file
+        break;
+      } 
+    }
+  }
 
-    stream.on('end', () => {
-      resolve(isBinary);
-    });
-
-    stream.on('error', (error) => {
-      reject(error);
-    });
- });
+  return isBinary;
 }
 
 async function processFile(filePath: string): Promise<void> {
