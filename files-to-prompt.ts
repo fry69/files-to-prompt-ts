@@ -30,44 +30,63 @@ function minimatch(filename: string, pattern: string): boolean {
 }
 
 function processPath(
-  dirPath: string,
+  pathToProcess: string,
   includeHidden: boolean,
   ignoreGitignore: boolean,
   ignorePatterns: string[]
 ): void {
-  const gitignoreRules = ignoreGitignore ? [] : readGitignore(dirPath);
+  if (fs.statSync(pathToProcess).isDirectory()) {
+    const gitignoreRules = ignoreGitignore ? [] : readGitignore(pathToProcess);
 
-  const files = fs.readdirSync(dirPath, { withFileTypes: true })
-    .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
-    .filter((dirent: any) => dirent.isFile())
-    .map((dirent: any) => path.join(dirPath, dirent.name));
+    const files = fs.readdirSync(pathToProcess, { withFileTypes: true })
+      .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
+      .filter((dirent: any) => dirent.isFile())
+      .map((dirent: any) => path.join(pathToProcess, dirent.name));
 
-  const directories = fs.readdirSync(dirPath, { withFileTypes: true })
-    .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
-    .filter((dirent: any) => dirent.isDirectory())
-    .map((dirent: any) => path.join(dirPath, dirent.name));
+    const directories = fs.readdirSync(pathToProcess, { withFileTypes: true })
+      .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
+      .filter((dirent: any) => dirent.isDirectory())
+      .map((dirent: any) => path.join(pathToProcess, dirent.name));
 
-  for (const file of files) {
-    if (!shouldIgnore(file, gitignoreRules) && !shouldIgnore(file, ignorePatterns)) {
+    for (const file of files) {
+      if (!shouldIgnore(file, gitignoreRules) && !shouldIgnore(file, ignorePatterns)) {
+        try {
+          const fileContents = fs.readFileSync(file, 'utf8');
+          console.log(file);
+          console.log('---');
+          console.log(fileContents);
+          console.log('---');
+        } catch (err) {
+          if ((err as { code: string }).code === 'EINVAL') {
+            console.error(`Warning: Skipping file ${file} due to UnicodeDecodeError`);
+          } else {
+            throw err;
+          }
+        }
+      }
+    }
+
+    for (const dir of directories) {
+      if (!shouldIgnore(dir, gitignoreRules)) {
+        processPath(dir, includeHidden, ignoreGitignore, ignorePatterns);
+      }
+    }
+  } else {
+    // Process a single file
+    if (!shouldIgnore(pathToProcess, []) && !shouldIgnore(pathToProcess, ignorePatterns)) {
       try {
-        const fileContents = fs.readFileSync(file, 'utf8');
-        console.log(file);
+        const fileContents = fs.readFileSync(pathToProcess, 'utf8');
+        console.log(pathToProcess);
         console.log('---');
         console.log(fileContents);
         console.log('---');
       } catch (err) {
         if ((err as { code: string }).code === 'EINVAL') {
-          console.error(`Warning: Skipping file ${file} due to UnicodeDecodeError`);
+          console.error(`Warning: Skipping file ${pathToProcess} due to UnicodeDecodeError`);
         } else {
           throw err;
         }
       }
-    }
-  }
-
-  for (const dir of directories) {
-    if (!shouldIgnore(dir, gitignoreRules)) {
-      processPath(dir, includeHidden, ignoreGitignore, ignorePatterns);
     }
   }
 }
@@ -82,11 +101,11 @@ program
   .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
   .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value, previous) => [...previous, value], [])
   .action((paths, options) => {
-    for (const path of paths) {
-      if (!fs.existsSync(path)) {
-        throw new Error(`Path does not exist: ${path}`);
+    for (const pathToProcess of paths) {
+      if (!fs.existsSync(pathToProcess)) {
+        throw new Error(`Path does not exist: ${pathToProcess}`);
       }
-      processPath(path, options.includeHidden, options.ignoreGitignore, options.ignore);
+      processPath(pathToProcess, options.includeHidden, options.ignoreGitignore, options.ignore);
     }
   });
 
