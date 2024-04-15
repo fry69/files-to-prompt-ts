@@ -82,10 +82,15 @@ async function processPath(
   config: ProcessingConfig
 ): Promise<void> {
   if (fs.statSync(pathToProcess).isDirectory()) {
-    let newConfig: ProcessingConfig = structuredClone(config);
+    let newConfig: ProcessingConfig = config; // intentional reference copy
     if (config.gitignoreRules.length === 0) {
+      // only check for another .gitingore for this hierarchy part if not already found one 
       const gitignoreRules = config.ignoreGitignore ? [] : readGitignore(pathToProcess);
-      newConfig.gitignoreRules = gitignoreRules;
+      if (gitignoreRules.length > 0) {
+        // deep cloning so that these .gitignore rules only apply to this part of the hierarchy
+        newConfig = structuredClone(config);
+        newConfig.gitignoreRules = gitignoreRules;
+      }
     }
 
     const files = fs.readdirSync(pathToProcess, { withFileTypes: true })
