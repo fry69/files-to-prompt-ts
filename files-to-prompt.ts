@@ -124,7 +124,7 @@ program
   .argument('<paths...>', 'One or more paths to files or directories to process')
   .option('--include-hidden', 'Include files and folders starting with .', false)
   .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
-  .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value, previous) => [...previous, value], [])
+  .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: any, previous: any) => [...previous, value], [])
   .action((paths, options) => {
     for (const pathToProcess of paths) {
       if (!fs.existsSync(pathToProcess)) {
