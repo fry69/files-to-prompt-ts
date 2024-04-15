@@ -4,6 +4,49 @@ import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
 
+function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
+ return new Promise((resolve, reject) => {
+    const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
+    let isBinary = false;
+
+    stream.on('data', (chunk) => {
+      for (let i = 0; i < chunk.length; i++) {
+        if (Buffer.isBuffer(chunk)) {
+          if (chunk.some((byte) => byte > 127)) { // Check for non-ASCII character
+            isBinary = true;
+            stream.destroy(); // Stop reading the file
+            break;
+          } 
+        }
+      }
+    });
+
+    stream.on('end', () => {
+      resolve(isBinary);
+    });
+
+    stream.on('error', (error) => {
+      reject(error);
+    });
+ });
+}
+
+async function processFile(filePath: string): Promise<void> {
+  try {
+    if (await isBinaryFile(filePath)) {
+      console.error(`Warning: Skipping binary file ${filePath}`);
+    } else {
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      console.log(filePath);
+      console.log('---');
+      console.log(fileContents);
+      console.log('---');
+    }
+  } catch (err) {
+    console.error(`Error processing file ${filePath}: ${err}`);
+  }
+}
+
 function shouldIgnore(filePath: string, ignorePatterns: string[]): boolean {
   for (const pattern of ignorePatterns) {
     if (minimatch(path.basename(filePath), pattern)) {
@@ -35,12 +78,12 @@ function minimatch(filename: string, pattern: string): boolean {
   return regex.test(filename);
 }
 
-function processPath(
+async function processPath(
   pathToProcess: string,
   includeHidden: boolean,
   ignoreGitignore: boolean,
   ignorePatterns: string[]
-): void {
+): Promise<void> {
   if (fs.statSync(pathToProcess).isDirectory()) {
     const gitignoreRules = ignoreGitignore ? [] : readGitignore(pathToProcess);
 
@@ -56,19 +99,7 @@ function processPath(
 
     for (const file of files) {
       if (!shouldIgnore(file, gitignoreRules) && !shouldIgnore(file, ignorePatterns)) {
-        try {
-          const fileContents = fs.readFileSync(file, 'utf8');
-          console.log(file);
-          console.log('---');
-          console.log(fileContents);
-          console.log('---');
-        } catch (err) {
-          if ((err as { code: string }).code === 'EINVAL') {
-            console.error(`Warning: Skipping file ${file} due to UnicodeDecodeError`);
-          } else {
-            throw err;
-          }
-        }
+        await processFile(file);
       }
     }
 
@@ -80,19 +111,7 @@ function processPath(
   } else {
     // Process a single file
     if (!shouldIgnore(pathToProcess, []) && !shouldIgnore(pathToProcess, ignorePatterns)) {
-      try {
-        const fileContents = fs.readFileSync(pathToProcess, 'utf8');
-        console.log(pathToProcess);
-        console.log('---');
-        console.log(fileContents);
-        console.log('---');
-      } catch (err) {
-        if ((err as { code: string }).code === 'EINVAL') {
-          console.error(`Warning: Skipping file ${pathToProcess} due to UnicodeDecodeError`);
-        } else {
-          throw err;
-        }
-      }
+      await processFile(pathToProcess);
     }
   }
 }

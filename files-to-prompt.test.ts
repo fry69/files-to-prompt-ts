@@ -123,4 +123,17 @@ describe('files-to-prompt.ts', () => {
     expect(output).toContain(file1Path);
     expect(output).toContain('File 1 contents');
   });
+
+  test('should skip binary files', () => {
+    const binaryFilePath = path.join(testDir, 'binary.data');
+    const binaryData = Buffer.from([0x80, 0x81, 0x82, 0x83, 0x84, 0x85]);
+    fs.writeFileSync(binaryFilePath, binaryData);
+
+    const output = execSync(`bun ./files-to-prompt.ts ${testDir}`).toString();
+    expect(output).not.toContain(binaryFilePath);
+    // The following test will fail because the warning gets send to stderr of the parent process
+    // and I don't know how to catch it
+    //
+    // expect(output).toContain('Warning: Skipping binary file');
+  });
 });
