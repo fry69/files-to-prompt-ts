@@ -13,5 +13,5 @@
   },
   "scripts": {
     "test": "bun test ./files-to-prompt.test.ts"
-}
+  }
 }
