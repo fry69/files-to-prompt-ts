@@ -9,6 +9,12 @@ function shouldIgnore(filePath: string, ignorePatterns: string[]): boolean {
     if (minimatch(path.basename(filePath), pattern)) {
       return true;
     }
+    if (pattern.endsWith('/')) {
+      const dirPattern = pattern.slice(0, -1);
+      if (minimatch(path.relative(path.dirname(filePath), filePath), dirPattern)) {
+        return true;
+      }
+    }
   }
   return false;
 }
