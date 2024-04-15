@@ -99,6 +99,24 @@ describe('files-to-prompt.ts', () => {
     expect(output).toContain(file2Path);
   });
 
+  test('should exclude directory matching patterns in .gitignore in different directories', () => {
+    const dir1Path = path.join(testDir, 'dir1');
+    const dir2Path = path.join(testDir, 'dir2');
+    fs.mkdirSync(dir1Path);
+    fs.mkdirSync(dir2Path);
+    const file1Path = path.join(dir1Path, 'file1.txt');
+    fs.writeFileSync(file1Path, 'File 1 contents');
+    const file2Path = path.join(dir2Path, 'file2.txt');
+    fs.writeFileSync(file2Path, 'File 2 contents');
+    fs.writeFileSync(path.join(dir1Path, '.gitignore'), 'file1.txt');
+    fs.writeFileSync(path.join(dir2Path, '.gitignore'), 'file2.txt');
+  
+    const output = execSync(`bun ./files-to-prompt.ts ${testDir}`).toString();
+    expect(output).not.toContain(file1Path);
+    expect(output).not.toContain(file2Path);
+  });
+
+
   test('should include hidden files and directories when --include-hidden is passed', () => {
     const hiddenFilePath = path.join(testDir, '.hidden-file.txt');
     const hiddenDirPath = path.join(testDir, '.hidden-dir');

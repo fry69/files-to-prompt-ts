@@ -4,6 +4,13 @@ import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
 
+interface ProcessingConfig {
+  includeHidden: boolean;
+  ignoreGitignore: boolean;
+  ignorePatterns: string[];
+  gitignoreRules: string[];
+}
+
 async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
   const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
   let isBinary = false;
@@ -21,7 +28,7 @@ async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise
   return isBinary;
 }
 
-async function processFile(filePath: string): Promise<void> {
+async function processFile(filePath: string, config: ProcessingConfig): Promise<void> {
   try {
     if (await isBinaryFile(filePath)) {
       console.error(`Warning: Skipping binary file ${filePath}`);
@@ -37,8 +44,10 @@ async function processFile(filePath: string): Promise<void> {
   }
 }
 
-function shouldIgnore(filePath: string, ignorePatterns: string[]): boolean {
-  for (const pattern of ignorePatterns) {
+function shouldIgnore(filePath: string, config: ProcessingConfig): boolean {
+  const { ignorePatterns, gitignoreRules } = config;
+
+  for (const pattern of [...gitignoreRules, ...ignorePatterns]) {
     if (minimatch(path.basename(filePath), pattern)) {
       return true;
     }
@@ -70,38 +79,40 @@ function minimatch(filename: string, pattern: string): boolean {
 
 async function processPath(
   pathToProcess: string,
-  includeHidden: boolean,
-  ignoreGitignore: boolean,
-  ignorePatterns: string[]
+  config: ProcessingConfig
 ): Promise<void> {
   if (fs.statSync(pathToProcess).isDirectory()) {
-    const gitignoreRules = ignoreGitignore ? [] : readGitignore(pathToProcess);
+    let newConfig: ProcessingConfig = structuredClone(config);
+    if (config.gitignoreRules.length === 0) {
+      const gitignoreRules = config.ignoreGitignore ? [] : readGitignore(pathToProcess);
+      newConfig.gitignoreRules = gitignoreRules;
+    }
 
     const files = fs.readdirSync(pathToProcess, { withFileTypes: true })
-      .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
+      .filter((dirent: any) => config.includeHidden || !dirent.name.startsWith('.'))
       .filter((dirent: any) => dirent.isFile())
       .map((dirent: any) => path.join(pathToProcess, dirent.name));
 
     const directories = fs.readdirSync(pathToProcess, { withFileTypes: true })
-      .filter((dirent: any) => includeHidden || !dirent.name.startsWith('.'))
+      .filter((dirent: any) => config.includeHidden || !dirent.name.startsWith('.'))
       .filter((dirent: any) => dirent.isDirectory())
       .map((dirent: any) => path.join(pathToProcess, dirent.name));
 
     for (const file of files) {
-      if (!shouldIgnore(file, gitignoreRules) && !shouldIgnore(file, ignorePatterns)) {
-        await processFile(file);
+      if (!shouldIgnore(file, newConfig)) {
+        await processFile(file, newConfig);
       }
     }
 
     for (const dir of directories) {
-      if (!shouldIgnore(dir, gitignoreRules)) {
-        processPath(dir, includeHidden, ignoreGitignore, ignorePatterns);
+      if (!shouldIgnore(dir, newConfig)) {
+        await processPath(dir, newConfig);
       }
     }
   } else {
     // Process a single file
-    if (!shouldIgnore(pathToProcess, []) && !shouldIgnore(pathToProcess, ignorePatterns)) {
-      await processFile(pathToProcess);
+    if (!shouldIgnore(pathToProcess, config)) {
+      await processFile(pathToProcess, config);
     }
   }
 }
@@ -116,11 +127,18 @@ program
   .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
   .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: any, previous: any) => [...previous, value], [])
   .action((paths, options) => {
+    const config: ProcessingConfig = {
+      includeHidden: options.includeHidden,
+      ignoreGitignore: options.ignoreGitignore,
+      ignorePatterns: options.ignore,
+      gitignoreRules: [],
+    };
+
     for (const pathToProcess of paths) {
       if (!fs.existsSync(pathToProcess)) {
         throw new Error(`Path does not exist: ${pathToProcess}`);
       }
-      processPath(pathToProcess, options.includeHidden, options.ignoreGitignore, options.ignore);
+      processPath(pathToProcess, config);
     }
   });
 
