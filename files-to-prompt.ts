@@ -11,6 +11,7 @@ interface ProcessingConfig {
   gitignoreRules: string[];
 }
 
+// These two functions allow redirecting the output via mock functions, they get implicitly tested
 export function output(...args: any[]) {
   console.log(...args);
 }
@@ -48,6 +49,10 @@ async function processFile(filePath: string): Promise<void> {
       output('---');
     }
   } catch (err) {
+    // This should not happen unless e.g. files get deleted while this tool runs
+    // I ran into this case as the test framework was cleaning up files before this tool was done
+    // Remove `Bun.sleep()` from the test script and you will end up here
+    // TODO: write test case (not trivial)
     error(`Error processing file ${filePath}: ${err}`);
   }
 }
