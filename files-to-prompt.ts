@@ -11,6 +11,14 @@ interface ProcessingConfig {
   gitignoreRules: string[];
 }
 
+export function output(...args: any[]) {
+  console.log(...args);
+}
+
+export function error(...args: any[]) {
+  console.error(...args);
+}
+
 async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
   const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
   let isBinary = false;
@@ -31,16 +39,16 @@ async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise
 async function processFile(filePath: string): Promise<void> {
   try {
     if (await isBinaryFile(filePath)) {
-      console.error(`Warning: Skipping binary file ${filePath}`);
+      error(`Warning: Skipping binary file ${filePath}`);
     } else {
       const fileContents = fs.readFileSync(filePath, 'utf8');
-      console.log(filePath);
-      console.log('---');
-      console.log(fileContents);
-      console.log('---');
+      output(filePath);
+      output('---');
+      output(fileContents);
+      output('---');
     }
   } catch (err) {
-    console.error(`Error processing file ${filePath}: ${err}`);
+    error(`Error processing file ${filePath}: ${err}`);
   }
 }
 
@@ -121,33 +129,40 @@ async function processPath(
     }
   } else {
     // Skip everything else, e.g. FIFOs, sockets, symlinks
-    console.error(`Skipping ${pathToProcess}: unsupported file type`);
+    error(`Skipping ${pathToProcess}: unsupported file type`);
   }
 }
 
-const program = new Command();
+export async function main( args: string[] = process.argv) {
+  const program = new Command();
 
-program
-  .version('0.2.1')
-  .description('Concatenate a directory full of files into a single prompt for use with LLMs')
-  .argument('<paths...>', 'One or more paths to files or directories to process')
-  .option('--include-hidden', 'Include files and folders starting with .', false)
-  .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
-  .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: string, previous: any[]) => [...previous, value], [])
-  .action((paths, options) => {
-    const config: ProcessingConfig = {
-      includeHidden: options.includeHidden,
-      ignoreGitignore: options.ignoreGitignore,
-      ignorePatterns: options.ignore,
-      gitignoreRules: [],
-    };
+  program
+    .version('0.2.1')
+    .description('Concatenate a directory full of files into a single prompt for use with LLMs')
+    .argument('<paths...>', 'One or more paths to files or directories to process')
+    .option('--include-hidden', 'Include files and folders starting with .', false)
+    .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
+    .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: string, previous: any[]) => [...previous, value], [])
+    .action(async (paths, options) => {
+      const config: ProcessingConfig = {
+        includeHidden: options.includeHidden,
+        ignoreGitignore: options.ignoreGitignore,
+        ignorePatterns: options.ignore,
+        gitignoreRules: [],
+      };
 
-    for (const pathToProcess of paths) {
-      if (!fs.existsSync(pathToProcess)) {
-        throw new Error(`Path does not exist: ${pathToProcess}`);
+      for (const pathToProcess of paths) {
+        if (!fs.existsSync(pathToProcess)) {
+          throw new Error(`Path does not exist: ${pathToProcess}`);
+        }
+        await processPath(pathToProcess, config);
       }
-      processPath(pathToProcess, config);
-    }
-  });
+    });
 
-program.parse(process.argv);
+  program.parse(args);
+}
+
+// Check if the script is being run directly
+if (import.meta.main) {
+  await main();
+}
