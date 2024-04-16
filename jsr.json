@@ -1,0 +1,5 @@
+{
+    "name": "@fry69/files-to-prompt-ts",
+    "version": "0.1.0",
+    "exports": "./files-to-prompt.ts"
+}
