@@ -55,6 +55,7 @@ File 3 contents
 ---
 Warning: Skipping binary file testfolder/binary.data
 ```
+> **Note:** Warnings and errors will get sent to `stderr`, piping the output to another command is safe
 
 ## Testing
 
