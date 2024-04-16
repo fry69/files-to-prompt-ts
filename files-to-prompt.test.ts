@@ -5,7 +5,7 @@ import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
 import { main } from "./files-to-prompt.ts";
 import * as ftp from "./files-to-prompt.ts";
 
-const sleepTime = 50;
+const sleepTime = 5; // looks like 5ms delay is enough on my M1, adjust if you see test fail
 
 describe('files-to-prompt.ts', () => {
   const testDir = path.join(__dirname, 'test-data');
