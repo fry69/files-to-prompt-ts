@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { Command } from 'commander';
 
 interface ProcessingConfig {
@@ -133,7 +133,8 @@ async function processPath(
       }
     }
   } else {
-    // Skip everything else, e.g. FIFOs, sockets, symlinks
+    // Skip everything else, e.g. FIFOs, sockets, symlinks (only when specified on the commandline)
+    // Files in directories get filtered above
     error(`Skipping ${pathToProcess}: unsupported file type`);
   }
 }

@@ -2,10 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
-import { main } from "./files-to-prompt.ts";
-import * as ftp from "./files-to-prompt.ts";
+import { main } from "./files-to-prompt";
+import * as ftp from "./files-to-prompt";
 
-const sleepTime = 1; // looks like 1ms delay is enough on my M1, adjust if you see test fail
+// Looks like 1ms not enough delay for tests to pass reliably, 5ms seems OK on my M1
+// In doubt, set to 50ms
+// Without this delay the afterEach() hook can run and delete files before the main() call has completed
+const sleepTime = 5;
 
 describe('files-to-prompt.ts', () => {
   const testDir = path.join(__dirname, 'test-data');
@@ -13,6 +16,11 @@ describe('files-to-prompt.ts', () => {
   let stdoutOutput: string = '';
   let stderrOutput: string = '';
 
+  // Overwrite / mock output functions in main script to capture output in variables
+  // Earlier versions of this test script used execSync() and direct stdout direction
+  // But this makes it hard to capture stderr output (stderr gets redirected to the parent process
+  // and then annoyingly error messages show up on the console when the test script runs)
+  // Also child_process testing prevents the test framework from tracing codepaths and this disables coverage
   spyOn(ftp, 'output').mockImplementation((...args: any[]) => { stdoutOutput += args.join(' ') + '\n' });
   spyOn(ftp, 'error').mockImplementation((...args: any[]) => { stderrOutput += args.join(' ') + '\n' });
 
@@ -27,9 +35,10 @@ describe('files-to-prompt.ts', () => {
   });
 
   async function runScript(args: any[]): Promise<void> {
-    const realArgs = ['bun', './files-to-prompt.ts', ...args];
-    await main(realArgs);
-    await Bun.sleep(sleepTime); // The joy of asynchrony, the tests will fail without this
+    // argv[0] and argv[1] need to be set to dummy values for the command-line parser to work
+    const completeArgs = ['bun', './files-to-prompt.ts', ...args];
+    await main(completeArgs);
+    await Bun.sleep(sleepTime); // The joy of asynchrony, tests will fail without sleeping a few ms here
   }
 
   test('should include single file passed on the command line', async () => {
