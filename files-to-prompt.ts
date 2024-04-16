@@ -28,7 +28,7 @@ async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise
   return isBinary;
 }
 
-async function processFile(filePath: string, config: ProcessingConfig): Promise<void> {
+async function processFile(filePath: string): Promise<void> {
   try {
     if (await isBinaryFile(filePath)) {
       console.error(`Warning: Skipping binary file ${filePath}`);
@@ -81,7 +81,12 @@ async function processPath(
   pathToProcess: string,
   config: ProcessingConfig
 ): Promise<void> {
-  if (fs.statSync(pathToProcess).isDirectory()) {
+  if (fs.statSync(pathToProcess).isFile()) {
+    // Process a single file
+    if (!shouldIgnore(pathToProcess, config)) {
+      await processFile(pathToProcess);
+    }
+  } else if (fs.statSync(pathToProcess).isDirectory()) {
     let newConfig: ProcessingConfig = config; // intentional reference copy
     if (config.gitignoreRules.length === 0) {
       // only check for another .gitingore for this hierarchy part if not already found one 
@@ -94,18 +99,18 @@ async function processPath(
     }
 
     const files = fs.readdirSync(pathToProcess, { withFileTypes: true })
-      .filter((dirent: any) => config.includeHidden || !dirent.name.startsWith('.'))
-      .filter((dirent: any) => dirent.isFile())
-      .map((dirent: any) => path.join(pathToProcess, dirent.name));
+      .filter((directoryEntry: fs.Dirent) => config.includeHidden || !directoryEntry.name.startsWith('.'))
+      .filter((directoryEntry: fs.Dirent) => directoryEntry.isFile())
+      .map((directoryEntry: fs.Dirent) => path.join(pathToProcess, directoryEntry.name));
 
     const directories = fs.readdirSync(pathToProcess, { withFileTypes: true })
-      .filter((dirent: any) => config.includeHidden || !dirent.name.startsWith('.'))
-      .filter((dirent: any) => dirent.isDirectory())
-      .map((dirent: any) => path.join(pathToProcess, dirent.name));
+      .filter((directoryEntry: fs.Dirent) => config.includeHidden || !directoryEntry.name.startsWith('.'))
+      .filter((directoryEntry: fs.Dirent) => directoryEntry.isDirectory())
+      .map((directoryEntry: fs.Dirent) => path.join(pathToProcess, directoryEntry.name));
 
     for (const file of files) {
       if (!shouldIgnore(file, newConfig)) {
-        await processFile(file, newConfig);
+        await processFile(file);
       }
     }
 
@@ -115,10 +120,8 @@ async function processPath(
       }
     }
   } else {
-    // Process a single file
-    if (!shouldIgnore(pathToProcess, config)) {
-      await processFile(pathToProcess, config);
-    }
+    // Skip everything else, e.g. FIFOs, sockets, symlinks
+    console.error(`Skipping ${pathToProcess}: unsupported file type`);
   }
 }
 
@@ -130,7 +133,7 @@ program
   .argument('<paths...>', 'One or more paths to files or directories to process')
   .option('--include-hidden', 'Include files and folders starting with .', false)
   .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
-  .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: any, previous: any) => [...previous, value], [])
+  .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: string, previous: any[]) => [...previous, value], [])
   .action((paths, options) => {
     const config: ProcessingConfig = {
       includeHidden: options.includeHidden,
