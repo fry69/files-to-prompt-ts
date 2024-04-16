@@ -1,3 +1,12 @@
+commit 2e05c9d6c46d64a314bc734ec085abb13da70d6b
+Date:   Tue Apr 16 17:41:39 2024 +0200
+
+    Add support for non-existent paths and reduce sleep time in tests
+
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+---
+
 commit 3d29134ff859a52bf2bc24b91166136500969edd
 Date:   Tue Apr 16 14:55:01 2024 +0200
 
