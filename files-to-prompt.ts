@@ -4,6 +4,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Command } from 'commander';
 
+/**
+ * Represents the configuration for the file processing.
+ * @interface ProcessingConfig
+ * @property {boolean} includeHidden - Indicates whether to include hidden files and directories.
+ * @property {boolean} ignoreGitignore - Indicates whether to ignore .gitignore files.
+ * @property {string[]} ignorePatterns - An array of patterns to ignore.
+ * @property {string[]} gitignoreRules - An array of .gitignore rules.
+ */
 interface ProcessingConfig {
   includeHidden: boolean;
   ignoreGitignore: boolean;
@@ -11,15 +19,35 @@ interface ProcessingConfig {
   gitignoreRules: string[];
 }
 
-// These two functions allow redirecting the output via mock functions, they get implicitly tested
-export function output(...args: any[]) {
+// The following two functions allow redirecting the output via mock functions in the test script.
+// They need to be exported for the test script, they get implicitly tested (no test case).
+
+/**
+ * Outputs the provided arguments to the console.
+ * @function output
+ * @param {...any[]} args - The arguments to log.
+ */
+export function output(...args: any[]): void {
   console.log(...args);
 }
 
-export function error(...args: any[]) {
+/**
+ * Outputs the provided arguments to the console as an error.
+ * @function error
+ * @param {...any[]} args - The arguments to log as an error.
+ */
+export function error(...args: any[]): void {
   console.error(...args);
 }
 
+/**
+ * Determines whether a file is a binary file.
+ * @async
+ * @function isBinaryFile
+ * @param {string} filePath - The path to the file.
+ * @param {number} [chunkSize=8192] - The size of the chunks to read from the file.
+ * @returns {Promise<boolean>} - A promise that resolves to `true` if the file is a binary file, `false` otherwise.
+ */
 async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
   const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
   let isBinary = false;
@@ -37,6 +65,13 @@ async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise
   return isBinary;
 }
 
+/**
+ * Processes a single file.
+ * @async
+ * @function processFile
+ * @param {string} filePath - The path to the file to process.
+ * @returns {Promise<void>}
+ */
 async function processFile(filePath: string): Promise<void> {
   try {
     if (await isBinaryFile(filePath)) {
@@ -57,6 +92,13 @@ async function processFile(filePath: string): Promise<void> {
   }
 }
 
+/**
+ * Determines whether a file should be ignored based on the provided configuration.
+ * @function shouldIgnore
+ * @param {string} filePath - The path to the file.
+ * @param {ProcessingConfig} config - The processing configuration.
+ * @returns {boolean} - `true` if the file should be ignored, `false` otherwise.
+ */
 function shouldIgnore(filePath: string, config: ProcessingConfig): boolean {
   const { ignorePatterns, gitignoreRules } = config;
 
@@ -74,6 +116,12 @@ function shouldIgnore(filePath: string, config: ProcessingConfig): boolean {
   return false;
 }
 
+/**
+ * Reads the .gitignore file from the specified directory.
+ * @function readGitignore
+ * @param {string} dirPath - The path to the directory.
+ * @returns {string[]} - An array of .gitignore rules.
+ */
 function readGitignore(dirPath: string): string[] {
   const gitignorePath = path.join(dirPath, '.gitignore');
   if (fs.existsSync(gitignorePath)) {
@@ -85,11 +133,26 @@ function readGitignore(dirPath: string): string[] {
   return [];
 }
 
+/**
+ * Checks if a filename matches a pattern using minimatch.
+ * @function minimatch
+ * @param {string} filename - The filename to match.
+ * @param {string} pattern - The pattern to match against.
+ * @returns {boolean} - `true` if the filename matches the pattern, `false` otherwise.
+ */
 function minimatch(filename: string, pattern: string): boolean {
   const regex = new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
   return regex.test(filename);
 }
 
+/**
+ * Processes a file or directory path.
+ * @async
+ * @function processPath
+ * @param {string} pathToProcess - The path to the file or directory to process.
+ * @param {ProcessingConfig} config - The processing configuration.
+ * @returns {Promise<void>}
+ */
 async function processPath(
   pathToProcess: string,
   config: ProcessingConfig
@@ -102,10 +165,10 @@ async function processPath(
   } else if (fs.statSync(pathToProcess).isDirectory()) {
     let newConfig: ProcessingConfig = config; // intentional reference copy
     if (config.gitignoreRules.length === 0) {
-      // only check for another .gitingore for this hierarchy part if not already found one 
+      // only check for .gitingore file for this hierarchy part if not already found one
       const gitignoreRules = config.ignoreGitignore ? [] : readGitignore(pathToProcess);
       if (gitignoreRules.length > 0) {
-        // deep cloning so that these .gitignore rules only apply to this part of the hierarchy
+        // deep cloning so current .gitignore rules only apply to current part of the hierarchy
         newConfig = structuredClone(config);
         newConfig.gitignoreRules = gitignoreRules;
       }
@@ -139,6 +202,13 @@ async function processPath(
   }
 }
 
+/**
+ * The main entry point of the script.
+ * @async
+ * @function main
+ * @param {string[]} [args=process.argv] - The command-line arguments.
+ * @returns {Promise<void>}
+ */
 export async function main( args: string[] = process.argv) {
   const program = new Command();
 
