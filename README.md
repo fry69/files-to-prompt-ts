@@ -12,7 +12,7 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 
 ## Installation
 
-To use `files-to-prompt`, you'll need to have [Bun](https://bun.sh/) installed on your system ([Node](https://nodejs.org/) may work too with minor modifications).
+To use `files-to-prompt`, you'll need to have [Bun](https://bun.sh/) installed on your system.
 
 Copy the `files-to-prompt.ts` script to a location where it is accessible from your system's `$PATH`, then make it executable (`chmod +x files-to-prompt.ts`).
 
