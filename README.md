@@ -44,6 +44,18 @@ files-to-prompt.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
 
 This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the [llm](https://llm.datasette.io/en/stable/) command, which adds a system prompt and sends it to an LLM model for processing.
 
+## Example output
+
+```
+$ ./files-to-prompt.ts testfolder/
+testfolder/file3.txt
+---
+File 3 contents
+
+---
+Warning: Skipping binary file testfolder/binary.data
+```
+
 ## Testing
 
 This tool includes a set of tests to ensure it works as expected. You can run the tests using the following command:
@@ -52,7 +64,7 @@ This tool includes a set of tests to ensure it works as expected. You can run th
 bun test --coverage
 ```
 
-Example output:
+Recent test status:
 
 ```
 bun test v1.1.3 (2615dc74)
