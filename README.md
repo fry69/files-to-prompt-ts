@@ -38,10 +38,11 @@ Available options:
 Example usage:
 
 ```
-files-to-prompt.ts ./my-project --include-hidden -i *.lockdb -i *.env | llm -s "Update README.md to current state of the project"
+files-to-prompt.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
+    llm -s "Update README.md to current state of the project"
 ```
 
-This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the `llm` command, which adds a system prompt and sends it to an LLM model for processing.
+This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the [llm](https://llm.datasette.io/en/stable/) command, which adds a system prompt and sends it to an LLM model for processing.
 
 ## Testing
 
