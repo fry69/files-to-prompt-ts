@@ -196,8 +196,9 @@ async function processPath(
       }
     }
   } else {
-    // Skip everything else, e.g. FIFOs, sockets, symlinks (only when specified on the commandline)
-    // Files in directories get filtered above
+    // Skip everything else, e.g. FIFOs, sockets, symlinks
+    // applies only to files directly specified on the commandline
+    // files in directories get filtered above
     error(`Skipping ${pathToProcess}: unsupported file type`);
   }
 }
@@ -209,7 +210,7 @@ async function processPath(
  * @param {string[]} [args=process.argv] - The command-line arguments.
  * @returns {Promise<void>}
  */
-export async function main( args: string[] = process.argv) {
+export async function main( args: string[] = process.argv): Promise<void> {
   const program = new Command();
 
   program
@@ -240,6 +241,7 @@ export async function main( args: string[] = process.argv) {
 }
 
 // Check if the script is being run directly
+// main() may not be called here when this script gets imported in the test script
 if (import.meta.main) {
   await main();
 }
