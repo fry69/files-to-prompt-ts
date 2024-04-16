@@ -5,7 +5,7 @@ import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
 import { main } from "./files-to-prompt.ts";
 import * as ftp from "./files-to-prompt.ts";
 
-const sleepTime = 5; // looks like 5ms delay is enough on my M1, adjust if you see test fail
+const sleepTime = 1; // looks like 1ms delay is enough on my M1, adjust if you see test fail
 
 describe('files-to-prompt.ts', () => {
   const testDir = path.join(__dirname, 'test-data');
@@ -30,8 +30,6 @@ describe('files-to-prompt.ts', () => {
     const realArgs = ['bun', './files-to-prompt.ts', ...args];
     await main(realArgs);
     await Bun.sleep(sleepTime); // The joy of asynchrony, the tests will fail without this
-    // console.error(stdoutOutput);
-    // console.error(stderrOutput);
   }
 
   test('should include single file passed on the command line', async () => {
@@ -191,6 +189,12 @@ describe('files-to-prompt.ts', () => {
     await runScript(args);
     expect(stderrOutput).toContain('Warning: Skipping binary file');
     expect(stdoutOutput).not.toContain(binaryFilePath);
+  });
+
+  test("should fail with error message if path does not exist", async () => {
+    const args = ['./file-does-not-exist.txt'];
+    await runScript(args);
+    expect(stderrOutput).toContain('Path does not exist');
   });
 
   test("should skip FIFOs", async () => {

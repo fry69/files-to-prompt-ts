@@ -153,7 +153,8 @@ export async function main( args: string[] = process.argv) {
 
       for (const pathToProcess of paths) {
         if (!fs.existsSync(pathToProcess)) {
-          throw new Error(`Path does not exist: ${pathToProcess}`);
+          error(`Path does not exist: ${pathToProcess}`);
+          return;
         }
         await processPath(pathToProcess, config);
       }
