@@ -45,7 +45,39 @@ This will concatenate all files (including hidden files) in the `./my-project` d
 This tool includes a set of tests to ensure it works as expected. You can run the tests using the following command:
 
 ```
-bun test
+bun test --coverage
+```
+
+Example output:
+
+```
+bun test v1.1.3 (2615dc74)
+
+files-to-prompt.test.ts:
+✓ files-to-prompt.ts > should include single file passed on the command line [7.09ms]
+✓ files-to-prompt.ts > should include multiple files passed on the command line [2.81ms]
+✓ files-to-prompt.ts > should include files in directories passed on the command line [1.81ms]
+✓ files-to-prompt.ts > should include files a few levels deep in a directory structure [2.01ms]
+✓ files-to-prompt.ts > should exclude files matching patterns passed via --ignore [1.91ms]
+✓ files-to-prompt.ts > should exclude files matching patterns in .gitignore [1.93ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore [1.96ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [1.99ms]
+✓ files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [1.88ms]
+✓ files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [1.72ms]
+✓ files-to-prompt.ts > should skip binary files [1.93ms]
+✓ files-to-prompt.ts > should fail with error message if path does not exist [2.35ms]
+✓ files-to-prompt.ts > should skip FIFOs [13.40ms]
+--------------------|---------|---------|-------------------
+File                | % Funcs | % Lines | Uncovered Line #s
+--------------------|---------|---------|-------------------
+All files           |   92.00 |   96.69 |
+ files-to-prompt.ts |   92.00 |   96.69 | 14,18,50
+--------------------|---------|---------|-------------------
+
+ 13 pass
+ 0 fail
+ 39 expect() calls
+Ran 13 tests across 1 files. [86.00ms]
 ```
 
 ## Contributing
