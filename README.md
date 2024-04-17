@@ -15,16 +15,33 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 
 ## Installation
 
-To use `files-to-prompt.ts` out-of-the-box, you'll need to have [Bun](https://bun.sh/) installed on your system.
+1. To use `files-to-prompt.ts` out-of-the-box, you'll need to have [Bun](https://bun.sh/) installed on your system.
 
-Copy the `files-to-prompt.ts` script to a location where it is accessible from your system's `$PATH`, then make it executable (`chmod +x files-to-prompt.ts`).
+2. Download the script
+
+<details>
+    <summary>Install via jsr.io</summary>
+```shell
+curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.6/files-to-prompt.ts > ftp.ts
+```
+</details>
+
+<details>
+  <summary>Install via GitHub</summary>
+```shell
+curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/main/files-to-prompt.ts > ftp.ts
+```
+</details>
+
+3. Copy the `ftp.ts` script to a location where it is accessible from your system's `$PATH`
+4. Make it executable with `chmod +x ftp.ts`
 
 ## Usage
 
-Run `files-to-prompt.ts` like a standard command:
+Run `ftp.ts` like a standard command:
 
 ```
-files-to-prompt.ts <paths...> [options]
+ftp.ts <paths...> [options]
 ```
 
 Replace `<paths...>` with one or more paths to files or directories you want to process. The tool will recursively process all files within the specified directories.
@@ -38,7 +55,7 @@ Available options:
 Example usage:
 
 ```
-files-to-prompt.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
+ftp.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
     llm -s "Update README.md to current state of the project"
 ```
 
@@ -47,7 +64,7 @@ This will concatenate all files (including hidden files) in the `./my-project` d
 ## Example output
 
 ```
-$ ./files-to-prompt.ts testfolder/
+$ ./ftp.ts testfolder/
 testfolder/file3.txt
 ---
 File 3 contents
