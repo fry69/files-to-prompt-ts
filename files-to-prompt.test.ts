@@ -250,4 +250,10 @@ describe('files-to-prompt.ts', () => {
     const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
     expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
   });
+
+  test('should de-duplicate file paths with parseFilePathsFromStdin()', () => {
+    const stdinData = `file1.txt:File 1 contents.\nfile2.txt:File 2 contents.\nfile1.txt:Another match in file1.txt.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
+  });
 });

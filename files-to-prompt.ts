@@ -248,12 +248,19 @@ let readStdin = async (): Promise<string> => {
 export function parseFilePathsFromStdin(stdinData: string): string[] {
   const filePathsFromStdin: string[] = [];
   const lines = stdinData.trim().split('\n');
+  const seenFilePaths = new Set<string>();
+
   for (const line of lines) {
     const filePath = line.split(':')[0];
-    filePathsFromStdin.push(filePath);
+    if (!seenFilePaths.has(filePath)) {
+      seenFilePaths.add(filePath);
+      filePathsFromStdin.push(filePath);
+    }
   }
+
   return filePathsFromStdin;
 }
+
 
 /**
  * The main entry point of the script.
