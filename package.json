@@ -10,9 +10,6 @@
     "typescript": "^5.0.0"
   },
   "type": "module",
-  "dependencies": {
-    "commander": "^12.0.0"
-  },
   "scripts": {
     "test": "bun test ./files-to-prompt.test.ts"
   }
