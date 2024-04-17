@@ -34,10 +34,8 @@ describe('files-to-prompt.ts', () => {
     stderrOutput = '';
   });
 
-  async function runScript(args: any[]): Promise<void> {
-    // argv[0] and argv[1] need to be set to dummy values for the command-line parser to work
-    const completeArgs = ['bun', './files-to-prompt.ts', ...args];
-    await main(completeArgs);
+  async function runScript(args: string[]): Promise<void> {
+    await main(args);
     await Bun.sleep(sleepTime); // The joy of asynchrony, tests will fail without sleeping a few ms here
   }
 

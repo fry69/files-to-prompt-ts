@@ -2,7 +2,6 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { Command } from 'commander';
 
 /**
  * Represents the configuration for the file processing.
@@ -49,16 +48,28 @@ export function error(...args: any[]): void {
  * @returns {Promise<boolean>} - A promise that resolves to `true` if the file is a binary file, `false` otherwise.
  */
 async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
-  const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
   let isBinary = false;
+  let stream: fs.ReadStream;
+
+  try {
+    stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
+  } catch (err: any) {
+    if (err.code === 'ENOENT') {
+      // File not found, return false
+      return false;
+    } else {
+      // Rethrow the error
+      throw err;
+    }
+  }
 
   for await (const chunk of stream) {
-    if (Buffer.isBuffer(chunk)) {
-      if (chunk.some((byte) => byte > 127)) { // Check for non-ASCII character
+    if (chunk instanceof Uint8Array) {
+      if (Array.from(chunk).some((byte) => byte > 127)) { // Check for non-ASCII character
         isBinary = true;
         stream.destroy(); // Stop reading the file
         break;
-      } 
+      }
     }
   }
 
@@ -207,41 +218,58 @@ async function processPath(
  * The main entry point of the script.
  * @async
  * @function main
- * @param {string[]} [args=process.argv] - The command-line arguments.
+ * @param {string[]} [args] - The command-line arguments.
  * @returns {Promise<void>}
  */
-export async function main( args: string[] = process.argv): Promise<void> {
-  const program = new Command();
+export async function main( args: string[] ): Promise<void> {
+  const config: ProcessingConfig = {
+    includeHidden: false,
+    ignoreGitignore: false,
+    ignorePatterns: [],
+    gitignoreRules: [],
+  };
+  let pathsToProcess: string[] = [];
 
-  program
-    .version('0.2.1')
-    .description('Concatenate a directory full of files into a single prompt for use with LLMs')
-    .argument('<paths...>', 'One or more paths to files or directories to process')
-    .option('--include-hidden', 'Include files and folders starting with .', false)
-    .option('--ignore-gitignore', 'Ignore .gitignore files and include all files', false)
-    .option('-i, --ignore <pattern>', 'Specify one or more patterns to ignore', (value: string, previous: any[]) => [...previous, value], [])
-    .action(async (paths, options) => {
-      const config: ProcessingConfig = {
-        includeHidden: options.includeHidden,
-        ignoreGitignore: options.ignoreGitignore,
-        ignorePatterns: options.ignore,
-        gitignoreRules: [],
-      };
-
-      for (const pathToProcess of paths) {
-        if (!fs.existsSync(pathToProcess)) {
-          error(`Path does not exist: ${pathToProcess}`);
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    switch (arg) {
+      case '--include-hidden':
+        config.includeHidden = true;
+        break;
+      case '--ignore-gitignore':
+        config.ignoreGitignore = true;
+        break;
+      case '-i':
+      case '--ignore':
+        if (i + 1 < args.length) {
+          config.ignorePatterns.push(args[++i]);
+        } else {
+          error('Error: --ignore option requires a pattern');
           return;
         }
-        await processPath(pathToProcess, config);
+        break;
+      default:
+        pathsToProcess.push(arg);
       }
-    });
+  }
 
-  program.parse(args);
+  for (const path of pathsToProcess) {
+    if (!fs.existsSync(path)) {
+      error(`Path does not exist: ${path}`);
+      return;
+    }
+    await processPath(path, config);
+  }
+  return;
 }
 
-// Check if the script is being run directly
+// Check if the script is being run directly and detect the runtime environment
 // main() may not be called here when this script gets imported in the test script
+// call the main function with the appropriate arguments
 if (import.meta.main) {
-  await main();
+  if (typeof (globalThis as any).Deno !== 'undefined') {
+    await main((globalThis as any).Deno.args);
+  } else {
+    await main(process.argv.slice(2));
+  }
 }
