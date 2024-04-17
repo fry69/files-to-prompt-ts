@@ -7,11 +7,13 @@ A command-line tool to concatenate a directory full of files into a single promp
 
 ## Description
 
-`files-to-prompt.ts` is a stand-alone, dependency free script that allows you to combine multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
+`files-to-prompt.ts` is a stand-alone, dependency free[^1] script that allows you to combine multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
 
 The tool supports processing both individual files and entire directories, and provides options to include or exclude hidden files, ignore `.gitignore` rules, and specify custom patterns to ignore. Only a simple subset of `.gitignore` patterns are supported.
 
 This is a TypeScript port of the original `files-to-prompt` tool written in Python by Simon Willison, which is available at [https://github.com/simonw/files-to-prompt](https://github.com/simonw/files-to-prompt).
+
+[^1]: the script needs a Typescript engine to run, of course
 
 ## Installation
 
@@ -29,8 +31,8 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
         curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.1.6/files-to-prompt.ts > ftp.ts
         ```
 
-3. Copy the `ftp.ts` script to a location where it is accessible from your system's `$PATH`
-4. Make it executable with `chmod +x ftp.ts`
+3. Make the script executable with `chmod +x ftp.ts`
+4. Move `ftp.ts` to a location where it is accessible from your system's `$PATH` (optional)
 
 ## Usage
 
