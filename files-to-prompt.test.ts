@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
-import { main, isBinaryFile } from "./files-to-prompt";
+import { main, isBinaryFile, parseFilePathsFromStdin } from "./files-to-prompt";
 import * as ftp from "./files-to-prompt";
 
 // Looks like 1ms not enough delay for tests to pass reliably, 5ms seems OK on my M1
@@ -243,5 +243,11 @@ describe('files-to-prompt.ts', () => {
     const args = ['./file-does-not-exist.txt'];
     await runScript(args);
     expect(stderrOutput).toContain('Path does not exist');
+  });
+
+  test('should parse file paths with parseFilePathsFromStdin() correctly', () => {
+    const stdinData = `file1.txt:File 1 contents.\nfile2.txt:File 2 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
   });
 });

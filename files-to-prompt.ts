@@ -218,6 +218,44 @@ async function processPath(
 }
 
 /**
+ * Reads the input from stdin.
+ * This function can be overridden in tests.
+ * @async
+ * @function readStdin
+ * @returns {Promise<string>} - The input from stdin.
+ */
+let readStdin = async (): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    let stdinData = '';
+    process.stdin.on('data', (chunk) => {
+      stdinData += chunk.toString();
+    });
+    process.stdin.on('end', () => {
+      resolve(stdinData);
+    });
+    process.stdin.on('error', (err) => {
+      reject(err);
+    });
+  });
+};
+
+/**
+ * Parses the file paths from the stdin input.
+ * @function parseFilePathsFromStdin
+ * @param {string} stdinData - The input from stdin.
+ * @returns {string[]} - An array of file paths.
+ */
+export function parseFilePathsFromStdin(stdinData: string): string[] {
+  const filePathsFromStdin: string[] = [];
+  const lines = stdinData.trim().split('\n');
+  for (const line of lines) {
+    const filePath = line.split(':')[0];
+    filePathsFromStdin.push(filePath);
+  }
+  return filePathsFromStdin;
+}
+
+/**
  * The main entry point of the script.
  * @async
  * @function main
@@ -254,6 +292,13 @@ export async function main( args: string[] ): Promise<void> {
       default:
         pathsToProcess.push(arg);
     }
+  }
+
+  // Process input from stdin
+  if (!process.stdin.isTTY) {
+    const stdinData = await readStdin();
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    pathsToProcess.push(...filePathsFromStdin);
   }
 
   for (const path of pathsToProcess) {
