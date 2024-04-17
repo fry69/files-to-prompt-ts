@@ -257,6 +257,58 @@ describe('files-to-prompt.ts', () => {
     expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
   });
 
+  test('should parse file paths with one file path per line', () => {
+    const stdinData = `file1.txt\nfile2.txt\nfile3.txt`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt', 'file3.txt']);
+  });
+
+  test('should handle mixed input formats', () => {
+    const stdinData = `file1.txt:File 1 contents.\nfile2.txt\nfile3.txt:File 3 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt', 'file3.txt']);
+  });
+
+  test('should handle empty lines in stdin data', () => {
+    const stdinData = `file1.txt:File 1 contents.\n\nfile2.txt:File 2 contents.\n`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
+  });
+
+  test('should handle binary data in stdin', () => {
+    const binaryData = Buffer.from([0x80, 0x81, 0x82, 0x83, 0x84, 0x85]);
+    const stdinData = `file1.txt:File 1 contents.\n${binaryData.toString('utf8')}\nfile2.txt:File 2 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
+  });
+
+  test('should handle common text/code files in stdin', () => {
+    const textData = `console.log('Hello, world\!');`;
+    const stdinData = `file1.txt:File 1 contents.\n${textData}\nfile2.txt:File 2 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', textData, 'file2.txt']);
+  });
+
+  test('should handle long file paths in stdin', () => {
+    const longFilePath = 'a'.repeat(1025);
+    const stdinData = `file1.txt:File 1 contents.\n${longFilePath}\nfile2.txt:File 2 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
+  });
+
+  test('should ignore file paths with the null character', () => {
+    const invalidFilePath = 'invalid_file\0.txt';
+    const stdinData = `file1.txt:File 1 contents.\n${invalidFilePath}\nfile2.txt:File 2 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
+  });
+
+  test('should ignore file paths with control characters', () => {
+    const stdinData = `file1.txt:File 1 contents.\nfile2.txt\x07.txt:File 2 contents.\nfile3.txt:File 3 contents.`;
+    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+    expect(filePathsFromStdin).toEqual(['file1.txt', 'file3.txt']);
+  });
+
   test('should output version string when --version is passed', async () => {
     await main(['--version']);
     expect(stdoutOutput).toContain(`files-to-prompt.ts version`);

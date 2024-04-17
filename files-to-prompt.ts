@@ -249,12 +249,24 @@ let readStdin = async (): Promise<string> => {
  */
 export function parseFilePathsFromStdin(stdinData: string): string[] {
   const filePathsFromStdin: string[] = [];
-  const lines = stdinData.trim().split('\n');
   const seenFilePaths = new Set<string>();
+  const lines = stdinData.trim().split('\n');
 
   for (const line of lines) {
-    const filePath = line.split(':')[0];
-    if (!seenFilePaths.has(filePath)) {
+    const filePath = line.trim();
+    if (filePath === '') {
+      // Ignore empty line
+      continue;
+    }
+    if (filePath.includes(':')) {
+      // Handle grep/ripgrep output format
+      const parts = filePath.split(':');
+      if (isValidFilePath(parts[0]) && !seenFilePaths.has(parts[0])) {
+        seenFilePaths.add(parts[0]);
+        filePathsFromStdin.push(parts[0]);
+      }
+    } else if (isValidFilePath(filePath) && !seenFilePaths.has(filePath)) {
+      // Handle file path per line format
       seenFilePaths.add(filePath);
       filePathsFromStdin.push(filePath);
     }
@@ -263,6 +275,28 @@ export function parseFilePathsFromStdin(stdinData: string): string[] {
   return filePathsFromStdin;
 }
 
+/**
+ * Checks if a given string is a valid file path.
+ * @function isValidFilePath
+ * @param {string} filePath - The file path to check.
+ * @returns {boolean} - `true` if the file path is valid, `false` otherwise.
+ */
+function isValidFilePath(filePath: string): boolean {
+  // Check if the file path contains only valid characters
+  for (const char of filePath) {
+    if (char.charCodeAt(0) < 32 || char.charCodeAt(0) > 126) {
+      return false;
+    }
+  }
+
+  // Check if the file path is not too long
+  if (filePath.length > 1024) {
+    return false;
+  }
+
+  // If the file path passes the above checks, consider it valid
+  return true;
+}
 
 /**
  * The main entry point of the script.
