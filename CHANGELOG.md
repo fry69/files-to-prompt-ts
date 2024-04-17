@@ -1,3 +1,12 @@
+commit 0600c8b41a65949ba7a7d85532270af43bb9ce8b
+Date:   Wed Apr 17 12:12:13 2024 +0200
+
+    Bump jsr version to 0.1.5
+
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+---
+
 commit 6774f2417e7d09d43c8dc3a6effd6431c9b07a31
 Date:   Wed Apr 17 12:07:56 2024 +0200
 
