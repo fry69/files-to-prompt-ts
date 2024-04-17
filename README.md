@@ -26,7 +26,7 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
     - Install via GitHub
 
         ```shell
-        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/main/files-to-prompt.ts > ftp.ts
+        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.1.6/files-to-prompt.ts > ftp.ts
         ```
 
 3. Copy the `ftp.ts` script to a location where it is accessible from your system's `$PATH`
