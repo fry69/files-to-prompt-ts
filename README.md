@@ -18,20 +18,16 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 1. To use `files-to-prompt.ts` out-of-the-box, you'll need to have [Bun](https://bun.sh/) installed on your system.
 
 2. Download the script
+    - Install via jsr.io
+        ```shell
+        curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.6/files-to-prompt.ts > ftp.ts
+        ```
 
-<details>
-    <summary>Install via jsr.io</summary>
-```shell
-curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.6/files-to-prompt.ts > ftp.ts
-```
-</details>
+    - Install via GitHub
 
-<details>
-  <summary>Install via GitHub</summary>
-```shell
-curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/main/files-to-prompt.ts > ftp.ts
-```
-</details>
+        ```shell
+        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/main/files-to-prompt.ts > ftp.ts
+        ```
 
 3. Copy the `ftp.ts` script to a location where it is accessible from your system's `$PATH`
 4. Make it executable with `chmod +x ftp.ts`
