@@ -1,3 +1,30 @@
+commit d92aa0ca090c5042af578111fe0d2518aab68360
+Date:   Wed Apr 17 12:41:25 2024 +0200
+
+    Bump jsr version to 0.1.6
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 9794cb7054064d1412e2995b6b21de0b5593c985
+Date:   Wed Apr 17 12:40:24 2024 +0200
+
+    Remove commander dependency from package.json
+
+ 2 files changed, 3 deletions(-)
+
+---
+
+commit 749985e6606ba5a8f080cb8f2d50a185c3850f6d
+Date:   Wed Apr 17 12:36:15 2024 +0200
+
+    Tiny polish
+
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+---
+
 commit 0600c8b41a65949ba7a7d85532270af43bb9ce8b
 Date:   Wed Apr 17 12:12:13 2024 +0200
 
