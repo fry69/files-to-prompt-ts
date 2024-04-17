@@ -1,3 +1,21 @@
+commit 6774f2417e7d09d43c8dc3a6effd6431c9b07a31
+Date:   Wed Apr 17 12:07:56 2024 +0200
+
+    Add compatibility section to README.md
+
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+---
+
+commit 801c6a63bf7945dde2901f37fb5cb66032fdd3d4
+Date:   Wed Apr 17 11:32:28 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 193 insertions(+)
+
+---
+
 commit 3e27783f43e2eb9e07ef255e9f02bb68c2aebf62
 Date:   Wed Apr 17 11:30:59 2024 +0200
 
