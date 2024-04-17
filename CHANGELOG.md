@@ -3,6 +3,8 @@ Date:   Wed Apr 17 11:30:59 2024 +0200
 
     Bump jsr version to 0.1.4
 
+    - removed npm install run from worklow as the script is now dependency free
+
  2 files changed, 2 insertions(+), 3 deletions(-)
 
 ---

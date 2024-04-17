@@ -7,7 +7,7 @@ A command-line tool to concatenate a directory full of files into a single promp
 
 ## Description
 
-`files-to-prompt` is a stand-alone script that allows you to combine multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
+`files-to-prompt.ts` is a stand-alone, dependency free script that allows you to combine multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
 
 The tool supports processing both individual files and entire directories, and provides options to include or exclude hidden files, ignore `.gitignore` rules, and specify custom patterns to ignore. Only a simple subset of `.gitignore` patterns are supported.
 
@@ -15,7 +15,7 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 
 ## Installation
 
-To use `files-to-prompt`, you'll need to have [Bun](https://bun.sh/) installed on your system.
+To use `files-to-prompt.ts` out-of-the-box, you'll need to have [Bun](https://bun.sh/) installed on your system.
 
 Copy the `files-to-prompt.ts` script to a location where it is accessible from your system's `$PATH`, then make it executable (`chmod +x files-to-prompt.ts`).
 
@@ -96,6 +96,11 @@ All files           |   92.00 |   96.69 |
  39 expect() calls
 Ran 13 tests across 1 files. [86.00ms]
 ```
+
+## Compatibility
+
+The script is compatible with [Deno](https://deno.com/).
+Transpilation to pure Javascript / [Node](https://nodejs.org/en) is (currently) not supported.
 
 ## Contributing
 
