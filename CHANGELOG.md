@@ -1,3 +1,79 @@
+commit 4770c378034c5152381f7e6ae263aed131e65f70
+Date:   Wed Apr 17 16:15:10 2024 +0200
+
+    Bump jsr version to 0.1.7
+
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+---
+
+commit a912f16952acb66b90408b320b3505f768a87cfd
+Date:   Wed Apr 17 16:13:30 2024 +0200
+
+    Update README.md with recent test output
+
+ 1 file changed, 23 insertions(+), 20 deletions(-)
+
+---
+
+commit 662ef15149a9c9a41af34121795cdd339711c5da
+Date:   Wed Apr 17 16:09:52 2024 +0200
+
+    Update test script
+    
+    - Add test case for multiple --ignore options
+    - Add test case for --ignore option without an argument
+    - Add test case for internal isBinaryFile function
+
+ 2 files changed, 44 insertions(+), 9 deletions(-)
+
+---
+
+commit 63815f768d9ae1f8426089bc54f2ba37865994d5
+Date:   Wed Apr 17 15:19:04 2024 +0200
+
+    Fix minor typo
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 93269334468bec89fa78d5f12e74bb2287459125
+Date:   Wed Apr 17 15:17:20 2024 +0200
+
+    Testing footnotes
+
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+---
+
+commit 096f6fdb90d3633df17e9ca40868c0307d5cdff3
+Date:   Wed Apr 17 15:09:23 2024 +0200
+
+    Switched to stable GitHub link
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit abd49b9789626305ca2c70e3d431f3744f24fecd
+Date:   Wed Apr 17 15:05:07 2024 +0200
+
+    Second try
+
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+---
+
+commit 8421524cf0b74ab28be2c28ab57b0b2c5f85f638
+Date:   Wed Apr 17 14:56:12 2024 +0200
+
+    Testing collapsed content
+
+ 1 file changed, 23 insertions(+), 6 deletions(-)
+
+---
+
 commit d92aa0ca090c5042af578111fe0d2518aab68360
 Date:   Wed Apr 17 12:41:25 2024 +0200
 
