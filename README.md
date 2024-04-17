@@ -25,13 +25,13 @@ Additional features not found the original version:
 2. Download the script
     - Install via jsr.io
         ```shell
-        curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.7/files-to-prompt.ts > ftp.ts
+        curl https://jsr.io/@fry69/files-to-prompt-ts/0.2.0/files-to-prompt.ts > ftp.ts
         ```
 
     - Install via GitHub
 
         ```shell
-        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.1.7/files-to-prompt.ts > ftp.ts
+        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.2.0/files-to-prompt.ts > ftp.ts
         ```
 
 3. Make the script executable with `chmod +x ftp.ts`
@@ -83,39 +83,43 @@ This tool includes a set of tests to ensure it works as expected. You can run th
 bun test --coverage
 ```
 
-Recent test status (v0.1.7):
+Recent test status (v0.2.0):
 
 ```
 bun test v1.1.4 (fbe2fe0c)
 
 files-to-prompt.test.ts:
-✓ files-to-prompt.ts > should include single file passed on the command line [14.48ms]
-✓ files-to-prompt.ts > should include multiple files passed on the command line [7.38ms]
-✓ files-to-prompt.ts > should include files in directories passed on the command line [7.51ms]
-✓ files-to-prompt.ts > should include files a few levels deep in a directory structure [6.27ms]
-✓ files-to-prompt.ts > should exclude files matching patterns passed via --ignore [7.65ms]
-✓ files-to-prompt.ts > should exclude files matching patterns passed via multiple --ignore [6.41ms]
-✓ files-to-prompt.ts > should fail when --ignore gets passed without an argument [5.84ms]
-✓ files-to-prompt.ts > should exclude files matching patterns in .gitignore [7.26ms]
-✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore [7.50ms]
-✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [6.56ms]
-✓ files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [7.16ms]
-✓ files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [6.28ms]
-✓ files-to-prompt.ts > should skip binary files [6.94ms]
-✓ files-to-prompt.ts > should fail silently if isBinaryFile() gets called with invalid path [0.91ms]
-✓ files-to-prompt.ts > should skip FIFOs [16.39ms]
-✓ files-to-prompt.ts > should fail with error message if path does not exist [5.61ms]
+✓ files-to-prompt.ts > should include single file passed on the command line [11.76ms]
+✓ files-to-prompt.ts > should include multiple files passed on the command line [6.84ms]
+✓ files-to-prompt.ts > should include files in directories passed on the command line [7.63ms]
+✓ files-to-prompt.ts > should include files a few levels deep in a directory structure [6.67ms]
+✓ files-to-prompt.ts > should exclude files matching patterns passed via --ignore [7.41ms]
+✓ files-to-prompt.ts > should exclude files matching patterns passed via multiple --ignore [6.67ms]
+✓ files-to-prompt.ts > should fail when --ignore gets passed without an argument [5.96ms]
+✓ files-to-prompt.ts > should exclude files matching patterns in .gitignore [6.81ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore [8.08ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [6.91ms]
+✓ files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [8.42ms]
+✓ files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [6.80ms]
+✓ files-to-prompt.ts > should skip binary files [6.63ms]
+✓ files-to-prompt.ts > should fail silently if isBinaryFile() gets called with invalid path [1.22ms]
+✓ files-to-prompt.ts > should skip FIFOs [16.55ms]
+✓ files-to-prompt.ts > should fail with error message if path does not exist [6.71ms]
+✓ files-to-prompt.ts > should parse file paths with parseFilePathsFromStdin() correctly [0.17ms]
+✓ files-to-prompt.ts > should de-duplicate file paths with parseFilePathsFromStdin() [0.04ms]
+✓ files-to-prompt.ts > should output version string when --version is passed [0.14ms]
+✓ files-to-prompt.ts > should output error for unsupported options [0.06ms]
 --------------------|---------|---------|-------------------
 File                | % Funcs | % Lines | Uncovered Line #s
 --------------------|---------|---------|-------------------
-All files           |   90.91 |   94.33 |
- files-to-prompt.ts |   90.91 |   94.33 | 28,39,62,100,274-277
+All files           |   87.50 |   87.15 |
+ files-to-prompt.ts |   87.50 |   87.15 | 30,41,64,102,229-240,315-317,335-338
 --------------------|---------|---------|-------------------
 
- 16 pass
+ 20 pass
  0 fail
- 45 expect() calls
-Ran 16 tests across 1 files. [205.00ms]
+ 51 expect() calls
+Ran 20 tests across 1 files. [159.00ms]
 ```
 
 ## Compatibility
