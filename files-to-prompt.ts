@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 
 /**
  * Represents the configuration for the file processing.
