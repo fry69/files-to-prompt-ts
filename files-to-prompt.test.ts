@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
-import { main } from "./files-to-prompt";
+import { main, isBinaryFile } from "./files-to-prompt";
 import * as ftp from "./files-to-prompt";
 
 // Looks like 1ms not enough delay for tests to pass reliably, 5ms seems OK on my M1
@@ -106,6 +106,32 @@ describe('files-to-prompt.ts', () => {
     expect(stdoutOutput).toContain(file2Path);
   });
 
+  test('should exclude files matching patterns passed via multiple --ignore', async () => {
+    const file1Path = path.join(testDir, 'file1.txt');
+    const file2Path = path.join(testDir, 'file2.txt');
+    const file3Path = path.join(testDir, 'file3.txt');
+    fs.writeFileSync(file1Path, 'File 1 contents');
+    fs.writeFileSync(file2Path, 'File 2 contents');
+    fs.writeFileSync(file3Path, 'File 3 contents');
+
+    const args = [testDir, '--ignore', 'file1.txt', '--ignore', 'file2.txt'];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).not.toContain(file1Path);
+    expect(stdoutOutput).not.toContain(file2Path);
+    expect(stdoutOutput).toContain(file3Path);
+  });
+
+  test('should fail when --ignore gets passed without an argument', async () => {
+    const file1Path = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(file1Path, 'File 1 contents');
+
+    const args = [testDir, '--ignore'];
+    await runScript(args);
+    expect(stderrOutput).toContain('--ignore option requires a pattern');
+    expect(stdoutOutput).not.toContain(file1Path);
+  });
+
   test('should exclude files matching patterns in .gitignore', async () => {
     const file1Path = path.join(testDir, 'file1.txt');
     const file2Path = path.join(testDir, 'file2.txt');
@@ -198,10 +224,9 @@ describe('files-to-prompt.ts', () => {
     expect(stdoutOutput).not.toContain(binaryFilePath);
   });
 
-  test("should fail with error message if path does not exist", async () => {
-    const args = ['./file-does-not-exist.txt'];
-    await runScript(args);
-    expect(stderrOutput).toContain('Path does not exist');
+  test('should fail silently if isBinaryFile() gets called with invalid path', async () => {
+    const result = await isBinaryFile('./file-does-not-exist.txt');
+    expect(result).toBeFalse;
   });
 
   test("should skip FIFOs", async () => {
@@ -212,5 +237,11 @@ describe('files-to-prompt.ts', () => {
     await runScript(args);
     expect(stderrOutput).toContain('unsupported file type');
     expect(stdoutOutput).not.toContain(fifoFilePath);
+  });
+
+  test("should fail with error message if path does not exist", async () => {
+    const args = ['./file-does-not-exist.txt'];
+    await runScript(args);
+    expect(stderrOutput).toContain('Path does not exist');
   });
 });

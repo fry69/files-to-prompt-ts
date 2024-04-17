@@ -18,11 +18,10 @@ interface ProcessingConfig {
   gitignoreRules: string[];
 }
 
-// The following two functions allow redirecting the output via mock functions in the test script.
-// They need to be exported for the test script, they get implicitly tested (no test case).
-
 /**
  * Outputs the provided arguments to the console.
+ * exported so it can be overridden in test script
+ * implicitly tested (no test case)
  * @function output
  * @param {...any[]} args - The arguments to log.
  */
@@ -32,6 +31,8 @@ export function output(...args: any[]): void {
 
 /**
  * Outputs the provided arguments to the console as an error.
+ * exported so it can be overridden in test script
+ * implicitly tested (no test case)
  * @function error
  * @param {...any[]} args - The arguments to log as an error.
  */
@@ -41,13 +42,14 @@ export function error(...args: any[]): void {
 
 /**
  * Determines whether a file is a binary file.
+ * exported to be testable in test script
  * @async
  * @function isBinaryFile
  * @param {string} filePath - The path to the file.
  * @param {number} [chunkSize=8192] - The size of the chunks to read from the file.
  * @returns {Promise<boolean>} - A promise that resolves to `true` if the file is a binary file, `false` otherwise.
  */
-async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
+export async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise<boolean> {
   let isBinary = false;
   let stream: fs.ReadStream;
 
@@ -59,6 +61,7 @@ async function isBinaryFile(filePath: string, chunkSize: number = 8192): Promise
       return false;
     } else {
       // Rethrow the error
+      // TODO: write test case (not trivial)
       throw err;
     }
   }
@@ -266,6 +269,7 @@ export async function main( args: string[] ): Promise<void> {
 // Check if the script is being run directly and detect the runtime environment
 // main() may not be called here when this script gets imported in the test script
 // call the main function with the appropriate arguments
+// TODO: write test case (not trivial)
 if (import.meta.main) {
   if (typeof (globalThis as any).Deno !== 'undefined') {
     await main((globalThis as any).Deno.args);
