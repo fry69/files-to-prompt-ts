@@ -22,13 +22,13 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 2. Download the script
     - Install via jsr.io
         ```shell
-        curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.6/files-to-prompt.ts > ftp.ts
+        curl https://jsr.io/@fry69/files-to-prompt-ts/0.1.7/files-to-prompt.ts > ftp.ts
         ```
 
     - Install via GitHub
 
         ```shell
-        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.1.6/files-to-prompt.ts > ftp.ts
+        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.1.7/files-to-prompt.ts > ftp.ts
         ```
 
 3. Make the script executable with `chmod +x ftp.ts`
