@@ -80,36 +80,39 @@ This tool includes a set of tests to ensure it works as expected. You can run th
 bun test --coverage
 ```
 
-Recent test status:
+Recent test status (v0.1.7):
 
 ```
-bun test v1.1.3 (2615dc74)
+bun test v1.1.4 (fbe2fe0c)
 
 files-to-prompt.test.ts:
-✓ files-to-prompt.ts > should include single file passed on the command line [7.09ms]
-✓ files-to-prompt.ts > should include multiple files passed on the command line [2.81ms]
-✓ files-to-prompt.ts > should include files in directories passed on the command line [1.81ms]
-✓ files-to-prompt.ts > should include files a few levels deep in a directory structure [2.01ms]
-✓ files-to-prompt.ts > should exclude files matching patterns passed via --ignore [1.91ms]
-✓ files-to-prompt.ts > should exclude files matching patterns in .gitignore [1.93ms]
-✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore [1.96ms]
-✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [1.99ms]
-✓ files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [1.88ms]
-✓ files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [1.72ms]
-✓ files-to-prompt.ts > should skip binary files [1.93ms]
-✓ files-to-prompt.ts > should fail with error message if path does not exist [2.35ms]
-✓ files-to-prompt.ts > should skip FIFOs [13.40ms]
+✓ files-to-prompt.ts > should include single file passed on the command line [14.48ms]
+✓ files-to-prompt.ts > should include multiple files passed on the command line [7.38ms]
+✓ files-to-prompt.ts > should include files in directories passed on the command line [7.51ms]
+✓ files-to-prompt.ts > should include files a few levels deep in a directory structure [6.27ms]
+✓ files-to-prompt.ts > should exclude files matching patterns passed via --ignore [7.65ms]
+✓ files-to-prompt.ts > should exclude files matching patterns passed via multiple --ignore [6.41ms]
+✓ files-to-prompt.ts > should fail when --ignore gets passed without an argument [5.84ms]
+✓ files-to-prompt.ts > should exclude files matching patterns in .gitignore [7.26ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore [7.50ms]
+✓ files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [6.56ms]
+✓ files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [7.16ms]
+✓ files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [6.28ms]
+✓ files-to-prompt.ts > should skip binary files [6.94ms]
+✓ files-to-prompt.ts > should fail silently if isBinaryFile() gets called with invalid path [0.91ms]
+✓ files-to-prompt.ts > should skip FIFOs [16.39ms]
+✓ files-to-prompt.ts > should fail with error message if path does not exist [5.61ms]
 --------------------|---------|---------|-------------------
 File                | % Funcs | % Lines | Uncovered Line #s
 --------------------|---------|---------|-------------------
-All files           |   92.00 |   96.69 |
- files-to-prompt.ts |   92.00 |   96.69 | 14,18,50
+All files           |   90.91 |   94.33 |
+ files-to-prompt.ts |   90.91 |   94.33 | 28,39,62,100,274-277
 --------------------|---------|---------|-------------------
 
- 13 pass
+ 16 pass
  0 fail
- 39 expect() calls
-Ran 13 tests across 1 files. [86.00ms]
+ 45 expect() calls
+Ran 16 tests across 1 files. [205.00ms]
 ```
 
 ## Compatibility
