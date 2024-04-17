@@ -218,7 +218,7 @@ async function processPath(
  * The main entry point of the script.
  * @async
  * @function main
- * @param {string[]} [args] - The command-line arguments.
+ * @param {string[]} args - The command-line arguments.
  * @returns {Promise<void>}
  */
 export async function main( args: string[] ): Promise<void> {
@@ -250,7 +250,7 @@ export async function main( args: string[] ): Promise<void> {
         break;
       default:
         pathsToProcess.push(arg);
-      }
+    }
   }
 
   for (const path of pathsToProcess) {
