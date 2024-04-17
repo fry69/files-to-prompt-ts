@@ -1,3 +1,57 @@
+commit db6126b20f16b14619703aa887579c947eccdf84
+Date:   Wed Apr 17 20:01:15 2024 +0200
+
+    Bump version to 0.2.0
+
+ 2 files changed, 29 insertions(+), 25 deletions(-)
+
+---
+
+commit ad63d08ba819e2837958530799c73a26bb19bb1e
+Date:   Wed Apr 17 19:58:17 2024 +0200
+
+    feat: add support for --version option, catch unsupported options
+
+ 2 files changed, 21 insertions(+)
+
+---
+
+commit 842d7d8539a0e8276b346a270701d62740185508
+Date:   Wed Apr 17 19:43:03 2024 +0200
+
+    Update README.md
+
+ 1 file changed, 3 insertions(+)
+
+---
+
+commit 201c3823b6c77d4296f08e7a8da23eec2e834481
+Date:   Wed Apr 17 19:36:41 2024 +0200
+
+    feat: de-duplicate file paths received via stdin
+
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+--
+
+commit bf4e83c9483097f58b4fa792f22392d5b3e8cad7
+Date:   Wed Apr 17 19:26:50 2024 +0200
+
+    feat: read and parse file paths from stdin
+
+ 2 files changed, 52 insertions(+), 1 deletion(-)
+
+---
+
+commit 283b12543ac994afee9087f965d0d8ec6817dde4
+Date:   Wed Apr 17 16:16:55 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 76 insertions(+)
+
+---
+
 commit 4770c378034c5152381f7e6ae263aed131e65f70
 Date:   Wed Apr 17 16:15:10 2024 +0200
 
