@@ -1,3 +1,30 @@
+commit 752a04bcb375969baed7d13be85deab401a6fe3c
+Date:   Wed Apr 17 23:08:46 2024 +0200
+
+    Bump version to 0.2.1
+
+ 3 files changed, 37 insertions(+), 29 deletions(-)
+
+---
+
+commit 4d3746a8748bbc889500dbc3c62a61226900c74a
+Date:   Wed Apr 17 23:05:31 2024 +0200
+
+    More robust filename parsing via stdin
+
+ 2 files changed, 89 insertions(+), 3 deletions(-)
+
+---
+
+commit 23c5a27653a2bc398bff8dcbb0338922a13558d2
+Date:   Wed Apr 17 20:02:43 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 54 insertions(+)
+
+---
+
 commit db6126b20f16b14619703aa887579c947eccdf84
 Date:   Wed Apr 17 20:01:15 2024 +0200
 
