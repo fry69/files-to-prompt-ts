@@ -13,6 +13,9 @@ The tool supports processing both individual files and entire directories, and p
 
 This is a TypeScript port of the original `files-to-prompt` tool written in Python by Simon Willison, which is available at [https://github.com/simonw/files-to-prompt](https://github.com/simonw/files-to-prompt).
 
+Additional features not found the original version:
+- reading and parsing file paths received via `stdin` (e.g. via pipe from `grep` or `ripgrep`)
+
 [^1]: The script needs a Typescript engine to run, of course.
 
 ## Installation
