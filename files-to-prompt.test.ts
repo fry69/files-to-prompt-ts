@@ -256,4 +256,16 @@ describe('files-to-prompt.ts', () => {
     const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
     expect(filePathsFromStdin).toEqual(['file1.txt', 'file2.txt']);
   });
+
+  test('should output version string when --version is passed', async () => {
+    await main(['--version']);
+    expect(stdoutOutput).toContain(`files-to-prompt.ts version`);
+    expect(stderrOutput).toBeEmpty();
+  });
+
+  test('should output error for unsupported options', async () => {
+    await main(['--unsupported-option']);
+    expect(stdoutOutput).toBeEmpty();
+    expect(stderrOutput).toContain('Unsupported option');
+  });
 });

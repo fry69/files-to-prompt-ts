@@ -3,6 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const VERSION = '0.2.0';
+
 /**
  * Represents the configuration for the file processing.
  * @interface ProcessingConfig
@@ -281,6 +283,9 @@ export async function main( args: string[] ): Promise<void> {
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {
+      case '--version':
+        output(`files-to-prompt.ts version ${VERSION}`);
+        return;
       case '--include-hidden':
         config.includeHidden = true;
         break;
@@ -297,6 +302,10 @@ export async function main( args: string[] ): Promise<void> {
         }
         break;
       default:
+        if (arg.startsWith('-')) {
+          error(`Error: Unsupported option '${arg}'`);
+          return;
+        }
         pathsToProcess.push(arg);
     }
   }
