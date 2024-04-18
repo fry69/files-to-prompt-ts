@@ -30,7 +30,7 @@ Once you have Bun installed, you can clone the repository and run the tool:
 
 ```bash
 git clone https://github.com/fry69/files-to-prompt-ts.git
-cd files-to-prompt.ts
+cd files-to-prompt-ts
 bun run files-to-prompt.ts [options] [paths]
 ```
 
