@@ -140,7 +140,7 @@ Ran 33 tests across 1 files. [195.00ms]
 
 ## Compatibility
 
-The script is compatible with [Deno](https://deno.com/).
+The script is mostly compatible with [Deno](https://deno.com/), see [issues](https://github.com/fry69/files-to-prompt-ts/issues) for details.
 Transpilation to pure Javascript / [Node](https://nodejs.org/en) is (currently) not supported.
 
 ## Contributing
