@@ -1,7 +1,7 @@
 {
   "name": "@fry69/files-to-prompt-ts",
   "module": "files-to-prompt.ts",
-  "version": "0.1.0",
+  "version": "0.4.2",
   "repository": "https://github.com/fry69/files-to-prompt-ts",
   "devDependencies": {
     "@types/bun": "latest"
