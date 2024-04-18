@@ -3,74 +3,95 @@
 [![JSR](https://jsr.io/badges/@fry69/files-to-prompt-ts)](https://jsr.io/@fry69/files-to-prompt-ts)
 [![JSR Score](https://jsr.io/badges/@fry69/files-to-prompt-ts/score)](https://jsr.io/@fry69/files-to-prompt-ts)
 
-A command-line tool to concatenate a directory full of files into a single prompt for use with Large Language Models (LLMs).
+A command-line tool to concatenate files and directories in a structured way to a single prompt for use with large language models and other applications.
 
 ## Description
 
-`files-to-prompt.ts` is a stand-alone, dependency free[^1] script that allows you to combine multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
-
-The tool supports processing both individual files and entire directories, and provides options to include or exclude hidden files, ignore `.gitignore` rules, and specify custom patterns to ignore. Only a simple subset of `.gitignore` patterns are supported.
+`files-to-prompt.ts` is a stand-alone, dependency free[^1] script that combines multiple text or code files into a single, continuous stream of content. This can be useful when working with LLMs, where you may want to provide a comprehensive set of information as input to the model, rather than individual files.
 
 This is a TypeScript port of the original `files-to-prompt` tool written in Python by Simon Willison, which is available at [https://github.com/simonw/files-to-prompt](https://github.com/simonw/files-to-prompt).
 
-Additional features not currently found the original version:
-- reading and parsing file paths received via `stdin` (e.g. via pipe from `grep` or `ripgrep`)
-- redirect output to a file with `--output <file>` or `-o <file>`
-- convert Jupyter Notebook `*.ipynb` files on the fly to ascii or markdown with [nbconvert](https://nbconvert.readthedocs.io/en/latest/index.html)
+[^1]: The script needs a TypeScript engine to run, of course.
 
-[^1]: The script needs a Typescript engine to run, of course.
+## Features
+
+- Extracts the contents of text files and presents them in a formatted way
+- Supports including or excluding hidden files and directories
+- Allows ignoring files based on patterns or .gitignore rules
+- Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown
+- Supports redirecting output to a file
+- Runs on the Bun runtime environment
 
 ## Installation
 
-1. To use `files-to-prompt.ts` out-of-the-box, you'll need to have [Bun](https://bun.sh/) installed on your system.
+To use the `files-to-prompt.ts` tool, you'll need to have the Bun TypeScript engine installed on your system. You can download and install Bun from the official website: [https://bun.sh/](https://bun.sh/)
 
-2. Download the script
-    - Install via jsr.io
-        ```shell
-        curl https://jsr.io/@fry69/files-to-prompt-ts/0.4.1/files-to-prompt.ts > ftp.ts
-        ```
+Once you have Bun installed, you can clone the repository and run the tool:
 
-    - Install via GitHub
+```bash
+git clone https://github.com/fry69/files-to-prompt.ts.git
+cd files-to-prompt.ts
+bun run files-to-prompt.ts [options] [paths]
+```
 
-        ```shell
-        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.1/files-to-prompt.ts > ftp.ts
-        ```
+Alternatively you can download the script directly:
+- from jsr.io:
+```shell
+curl https://jsr.io/@fry69/files-to-prompt-ts/0.4.1/files-to-prompt.ts > ftp.ts
+```
+- from GitHub:
+```shell
+curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.1/files-to-prompt.ts > ftp.ts
+```
 
-3. Make the script executable with `chmod +x ftp.ts`
-4. Move `ftp.ts` to a location where it is accessible from your system's `$PATH` (optional)
+Don't forget to make the script executable with `chmod +x ftp.ts` and move it to a location where it is accessible from your system's `$PATH` (optional).
 
 ## Usage
 
-Run `ftp.ts` like a standard command:
+### Command-line Arguments
+
+The tool accepts the following command-line arguments:
 
 ```
-ftp.ts <paths...> [options]
+--version                 Output the version of the tool
+--include-hidden          Include hidden files and directories
+--ignore-gitignore        Ignore .gitignore files
+-i, --ignore <pattern>    Ignore files matching the specified pattern
+-o, --output <file>       Redirect output to the specified file
+--nbconvert <command>     Specify the nbconvert command to use for .ipynb files
+--format <format>         Specify the format to convert .ipynb files to ('asciidoc' or 'markdown')
+[paths]                   One or more file or directory paths to process
 ```
 
-Replace `<paths...>` with one or more paths to files or directories you want to process. The tool will recursively process all files within the specified directories.
+### Input from Stdin
 
-Available options:
+The tool can also accept file paths from stdin. The input can be in the following formats:
 
-- `--version`: Version of this script
-- `--include-hidden`: Include files and folders starting with `.` (default: `false`)
-- `--ignore-gitignore`: Ignore `.gitignore` files and include all files (default: `false`)
-- `-i, --ignore <pattern>`: Specify one or more patterns to ignore (can be used multiple times)
-- `-o, --output <file>`: Redirect output to `file` (**Note:** `file` will get silently overwritten)
-- `--nbconvert <toolname>`: Name or full path of the installed `nbconvert` tool, e.g. `jupyter-nbconvert`
-- `--format [asciidoc | markdown]`: Output format for the `nbconvert` tool, defaults to `asciidoc`
+- One file path per line
+- File paths with a colon separator, as in the output of grep or ripgrep
 
-Jupyter Notebook conversion gets triggered when the `--nbconvert <toolname>` option is set, otherwise `.ipynb` files will get included verbatim in their `JSON` format (including `base64` encoded images etc). Each file conversion will happen in a freshly created temporary directory which will get deleted after each conversion.
+### Output Configuration
 
-Example usage:
+By default, the tool outputs the file contents to the console. You can redirect the output to a file using the `--output` or `-o` option.
+
+### Notebook Conversion
+
+If the `--nbconvert` option is provided, the tool will attempt to convert any `.ipynb` (Jupyter Notebook) files to the specified format (`--format asciidoc` or `--format markdown`) using the provided `nbconvert` command name or path. By default `asciidoc` will be used.
+
+Without conversion (or if the provided command cannot be found) `.ipynb` files will get included verbatim in their `JSON` format (including `base64` encoded images etc).
+
+Internally each file conversion happens in a freshly created temporary directory (via `mktemp` API), which gets deleted automatically after successful (or unsucessful) completion.
+
+### Example usage:
 
 ```
 ftp.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
-    llm -s "Update README.md to current state of the project"
+    llm -s "Check the provided code for spelling errors, inconsistencies, dead code and other minor issues I might have overlooked."
 ```
 
-This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the [llm](https://llm.datasette.io/en/stable/) command, which adds a system prompt and sends it to an LLM model for processing.
+This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the [llm](https://llm.datasette.io/en/stable/) command, which adds a system prompt and sends it to a LLM API for processing.
 
-## Example output
+## Example output format
 
 ```
 $ ./ftp.ts testfolder/
@@ -81,11 +102,12 @@ File 3 contents
 ---
 Warning: Skipping binary file testfolder/binary.data
 ```
-> **Note:** Warnings and errors will get sent to `stderr`, piping the output to another command is safe
+
+> **Note:** Warnings and errors will get sent to `stderr`, piping the output to another command is safe. The script tries its best to keep the output stream clean.
 
 ## Testing
 
-This tool includes a set of tests to ensure it works as expected. You can run the tests using the following command:
+This repository includes a comprehensive test script to ensure `files-to-prompt.ts` works as expected. You can run the tests using the following command:
 
 ```
 bun test --coverage
