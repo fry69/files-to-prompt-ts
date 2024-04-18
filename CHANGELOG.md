@@ -1,3 +1,66 @@
+commit 4d465ca6055db3efaa1930b2c56ecc84f7c5943c
+Date:   Thu Apr 18 18:06:36 2024 +0200
+
+    Bump version to 0.4.2
+
+ 4 files changed, 44 insertions(+), 44 deletions(-)
+
+---
+
+commit bc6498951268891b4779f409b91f370f30a2d876
+Date:   Thu Apr 18 18:00:55 2024 +0200
+
+    fix: glaring readStdin() inconsistent definition
+
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+---
+
+commit 2254475b05d988f4f677f3044cf20e88715c4b6a
+Date:   Thu Apr 18 17:43:18 2024 +0200
+
+    doc: fix the same typo a line below in README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 52c393764bd10e4d6d520e43408f660fc5ad08ba
+Date:   Thu Apr 18 17:41:14 2024 +0200
+
+    doc: fix typo in README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit f56b11e912d22551ee21d308b9fe32dc49bb592f
+Date:   Thu Apr 18 17:30:15 2024 +0200
+
+    doc: fix overlong line in README.md
+
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+---
+
+commit 2152fc7288fd91199c557897c9ec718a73f220ff
+Date:   Thu Apr 18 17:25:27 2024 +0200
+
+    doc: revamp README.md
+
+ 1 file changed, 61 insertions(+), 39 deletions(-)
+
+---
+
+commit 6f343bca2a8c050776912d5ffbe811cc61d56551
+Date:   Thu Apr 18 15:36:27 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 47 insertions(+)
+
+---
+
 commit def336ee754fbfe9ac7cc4480a99d67ad6ad4398
 Date:   Thu Apr 18 15:34:52 2024 +0200
 
