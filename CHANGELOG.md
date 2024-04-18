@@ -1,3 +1,39 @@
+commit 0f8c5ff3c67e6c468a9c2dbce6d0e4f63f00c3b3
+Date:   Thu Apr 18 08:46:06 2024 +0200
+
+    Bump version to 0.3.0
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 497d702b07026cc9aee1ecf931ee26a717fb3d92
+Date:   Thu Apr 18 08:45:37 2024 +0200
+
+    Update README.md with new --output feature
+
+ 1 file changed, 38 insertions(+), 30 deletions(-)
+
+---
+
+commit 551a149364240a768faf47f355c306a2a34748e8
+Date:   Thu Apr 18 08:41:36 2024 +0200
+
+    feat: redirect out to file with cli option
+
+ 2 files changed, 139 insertions(+), 7 deletions(-)
+
+---
+
+commit 31ef9ca078a0d69bc3464b3f27ff1478819ebec7
+Date:   Wed Apr 17 23:09:44 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 27 insertions(+)
+
+---
+
 commit 752a04bcb375969baed7d13be85deab401a6fe3c
 Date:   Wed Apr 17 23:08:46 2024 +0200
 
