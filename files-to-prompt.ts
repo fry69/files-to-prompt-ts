@@ -319,12 +319,11 @@ async function processPath(
 
 /**
  * Reads the input from stdin.
- * This function can be overridden in tests.
  * @async
  * @function readStdin
  * @returns {Promise<string>} - The input from stdin.
  */
-let readStdin = async (): Promise<string> => {
+async function readStdin(): Promise<string> {
   return new Promise((resolve, reject) => {
     let stdinData = '';
     process.stdin.on('data', (chunk) => {
