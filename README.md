@@ -86,7 +86,8 @@ Internally each file conversion happens in a freshly created temporary directory
 
 ```
 ftp.ts ./my-project --include-hidden -i *.lockdb -i *.env | \
-    llm -s "Check the provided code for spelling errors, inconsistencies, dead code and other minor issues I might have overlooked."
+    llm -s "Check the provided code for spelling errors, inconsistencies,
+            dead code and other minor issues I might have overlooked."
 ```
 
 This will concatenate all files (including hidden files) in the `./my-project` directory, excluding any files matching the `*.lockdb` or `*.env` patterns, and then send the result to the [llm](https://llm.datasette.io/en/stable/) command, which adds a system prompt and sends it to a LLM API for processing.
