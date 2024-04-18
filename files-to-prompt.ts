@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 
 /**
  * Represents the configuration for output.

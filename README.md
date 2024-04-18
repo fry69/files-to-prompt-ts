@@ -27,13 +27,13 @@ Additional features not currently found the original version:
 2. Download the script
     - Install via jsr.io
         ```shell
-        curl https://jsr.io/@fry69/files-to-prompt-ts/0.4.0/files-to-prompt.ts > ftp.ts
+        curl https://jsr.io/@fry69/files-to-prompt-ts/0.4.1/files-to-prompt.ts > ftp.ts
         ```
 
     - Install via GitHub
 
         ```shell
-        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.0/files-to-prompt.ts > ftp.ts
+        curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.1/files-to-prompt.ts > ftp.ts
         ```
 
 3. Make the script executable with `chmod +x ftp.ts`
@@ -91,7 +91,7 @@ This tool includes a set of tests to ensure it works as expected. You can run th
 bun test --coverage
 ```
 
-Recent test status (v0.4.0):
+Recent test status (v0.4.1):
 
 ```
 bun test v1.1.4 (fbe2fe0c)
