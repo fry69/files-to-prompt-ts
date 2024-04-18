@@ -12,24 +12,27 @@ const sleepTime = 5;
 
 describe('files-to-prompt.ts', () => {
   const testDir = path.join(__dirname, 'test-data');
+  const outDir = path.join(__dirname, 'test-output');
 
   let stdoutOutput: string = '';
   let stderrOutput: string = '';
 
-  // Overwrite / mock output functions in main script to capture output in variables
+  // Overwrite / mock console output functions in main script to capture output in variables
   // Earlier versions of this test script used execSync() and direct stdout direction
   // But this makes it hard to capture stderr output (stderr gets redirected to the parent process
   // and then annoyingly error messages show up on the console when the test script runs)
   // Also child_process testing prevents the test framework from tracing codepaths and this disables coverage
-  spyOn(ftp, 'output').mockImplementation((...args: any[]) => { stdoutOutput += args.join(' ') + '\n' });
-  spyOn(ftp, 'error').mockImplementation((...args: any[]) => { stderrOutput += args.join(' ') + '\n' });
+  spyOn(ftp, 'consoleOutput').mockImplementation((...args: any[]) => { stdoutOutput += args.join(' ') + '\n' });
+  spyOn(ftp, 'consoleError').mockImplementation((...args: any[]) => { stderrOutput += args.join(' ') + '\n' });
 
   beforeEach(() => {
     fs.mkdirSync(testDir, { recursive: true });
+    fs.mkdirSync(outDir, { recursive: true });
   });
 
   afterEach(() => {
     fs.rmSync(testDir, { recursive: true, force: true });
+    fs.rmSync(outDir, { recursive: true, force: true });
     stdoutOutput = '';
     stderrOutput = '';
   });
@@ -319,5 +322,66 @@ describe('files-to-prompt.ts', () => {
     await main(['--unsupported-option']);
     expect(stdoutOutput).toBeEmpty();
     expect(stderrOutput).toContain('Unsupported option');
+  });
+
+  test('should output to a file when --output is passed', async () => {
+    const filePath = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(filePath, 'File 1 contents');
+    const outputFilePath = path.join(outDir, 'output.txt');
+
+    const args = [filePath, '--output', outputFilePath];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toBeEmpty();
+
+    const outputFileContents = fs.readFileSync(outputFilePath, 'utf8');
+    expect(outputFileContents).toContain(filePath);
+    expect(outputFileContents).toContain('File 1 contents');
+  });
+
+  test('should output to a file when -o is passed', async () => {
+    const filePath = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(filePath, 'File 1 contents');
+    const outputFilePath = path.join(outDir, 'output.txt');
+
+    const args = [filePath, '-o', outputFilePath];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toBeEmpty();
+
+    const outputFileContents = fs.readFileSync(outputFilePath, 'utf8');
+    expect(outputFileContents).toContain(filePath);
+    expect(outputFileContents).toContain('File 1 contents');
+  });
+
+  test('should output error if --output is passed without a file path', async () => {
+    const filePath = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(filePath, 'File 1 contents');
+
+    const args = [filePath, '--output'];
+    await runScript(args);
+    expect(stderrOutput).toContain('option requires a file path');
+    expect(stdoutOutput).toBeEmpty();
+  });
+
+  test('should output error if -o is passed without a file path', async () => {
+    const filePath = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(filePath, 'File 1 contents');
+
+    const args = [filePath, '-o'];
+    await runScript(args);
+    expect(stderrOutput).toContain('option requires a file path');
+    expect(stdoutOutput).toBeEmpty();
+  });
+
+  test('should output error if output file cannot be written', async () => {
+    const filePath = path.join(testDir, 'file1.txt');
+    fs.writeFileSync(filePath, 'File 1 contents');
+    const outputFilePath = path.join('/non-existent-directory', 'output.txt');
+
+    const args = [filePath, '--output', outputFilePath];
+    await runScript(args);
+    expect(stderrOutput).toContain('Error writing to output file');
+    expect(stdoutOutput).toBeEmpty();
   });
 });

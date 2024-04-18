@@ -3,7 +3,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const VERSION = '0.2.1';
+const VERSION = '0.3.0';
+
+/**
+ * Represents the configuration for output.
+ * @interface OutputConfig
+ * @property {string} stdoutFile - Filename to redirect stdout.
+ * @property {string} stderrFile - Filename to redirect stderr.
+ */
+interface OutputConfig {
+  stdoutFile: string;
+  stderrFile: string;
+}
+
+const outputConfig: OutputConfig = {
+  stdoutFile: '',
+  stderrFile: '',
+}
 
 /**
  * Represents the configuration for the file processing.
@@ -24,22 +40,56 @@ interface ProcessingConfig {
  * Outputs the provided arguments to the console.
  * exported so it can be overridden in test script
  * implicitly tested (no test case)
+ * @function consoleOutput
+ * @param {...any[]} args - The arguments to log.
+ */
+export function consoleOutput(...args: any[]): void {
+  console.log(...args);
+}
+
+/**
+ * Outputs the provided arguments to the console or file.
  * @function output
  * @param {...any[]} args - The arguments to log.
  */
-export function output(...args: any[]): void {
-  console.log(...args);
+function output(...args: any[]): void {
+  if (outputConfig.stdoutFile) {
+    try {
+      fs.appendFileSync(outputConfig.stdoutFile, args.join(' ') + '\n');
+    } catch (err) {
+      error(`Error writing to output file ${outputConfig.stdoutFile}: ${err}`);
+    }
+  } else {
+    consoleOutput(...args);
+  }
 }
 
 /**
  * Outputs the provided arguments to the console as an error.
  * exported so it can be overridden in test script
  * implicitly tested (no test case)
+ * @function consoleError
+ * @param {...any[]} args - The arguments to log.
+ */
+export function consoleError(...args: any[]): void {
+  console.error(...args);
+}
+
+/**
+ * Outputs the provided arguments to the console or file as an error.
  * @function error
  * @param {...any[]} args - The arguments to log as an error.
  */
 export function error(...args: any[]): void {
-  console.error(...args);
+  if (outputConfig.stderrFile) {
+    try {
+      fs.appendFileSync(outputConfig.stderrFile, args.join(' ') + '\n');
+    } catch (err) {
+      error(`Error writing to error file ${outputConfig.stderrFile}: ${err}`);
+    }
+  } else {
+    consoleError(...args);
+  }
 }
 
 /**
@@ -332,6 +382,24 @@ export async function main( args: string[] ): Promise<void> {
           config.ignorePatterns.push(args[++i]);
         } else {
           error('Error: --ignore option requires a pattern');
+          return;
+        }
+        break;
+      case '--output':
+      case '-o':
+        if (i + 1 < args.length) {
+          outputConfig.stdoutFile = args[++i];
+          try {
+            fs.writeFileSync(outputConfig.stdoutFile, '');
+            // delete existing content in file
+            fs.truncateSync(outputConfig.stdoutFile);
+          } catch (err) {
+            error(`Error writing to output file ${outputConfig.stdoutFile}: ${err}`);
+            outputConfig.stdoutFile = '';
+            return;
+          }
+        } else {
+          error('Error: --output option requires a file path');
           return;
         }
         break;
