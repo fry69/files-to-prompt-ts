@@ -86,7 +86,7 @@ export function consoleError(...args: any[]): void {
  * @function error
  * @param {...any[]} args - The arguments to log as an error.
  */
-export function error(...args: any[]): void {
+function error(...args: any[]): void {
   if (outputConfig.stderrFile) {
     try {
       fs.appendFileSync(outputConfig.stderrFile, args.join(' ') + '\n');
