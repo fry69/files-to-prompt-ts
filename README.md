@@ -157,3 +157,7 @@ If you find any issues or have suggestions for improvements, feel free to open a
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Disclaimer
+
+Large Language Models were used to create this tool. All generated code was curated by me before inclusion and nearly all codepaths get thorougly tested. Despite best efforts and intentions, there may be bugs.
