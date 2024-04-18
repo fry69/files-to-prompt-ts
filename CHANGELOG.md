@@ -1,3 +1,39 @@
+commit 2317d3ff546e8008efa61bfe48df0cdc772794eb
+Date:   Thu Apr 18 13:26:56 2024 +0200
+
+    Bump version to 0.4.0
+
+ 3 files changed, 41 insertions(+), 39 deletions(-)
+
+---
+
+commit 5802d3f6375e945773ae0c9f7171bfe9c3acc844
+Date:   Thu Apr 18 13:24:31 2024 +0200
+
+    feat: convert Jupyter Notebook files on-the-fly with nbconvert
+
+ 3 files changed, 145 insertions(+), 10 deletions(-)
+
+---
+
+commit ddacb0c081be47bbc1bbce973e5298a440134101
+Date:   Thu Apr 18 13:06:28 2024 +0200
+
+    Fix compatibility note about Deno in README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit c474eaa3238bfd01dc6f3cb49fe2e41b8b0b6cb9
+Date:   Thu Apr 18 08:47:09 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 36 insertions(+)
+
+---
+
 commit 0f8c5ff3c67e6c468a9c2dbce6d0e4f63f00c3b3
 Date:   Thu Apr 18 08:46:06 2024 +0200
 
