@@ -385,7 +385,9 @@ describe('files-to-prompt.ts', () => {
     expect(stdoutOutput).toBeEmpty();
   });
 
-  const nbconvertTool = 'jupyter-nbconvert';
+  // const nbconvertTool = 'jupyter-nbconvert'; // real nbconvert tool (no point in running it for every test)
+  const nbconvertTool = './nbconvert-shim.ts'; // fast fake tool for testing, with relative path
+  // const nbconvertTool = path.join(__dirname, 'nbconvert-shim.ts'); // same as above, with absolute path
   const ipynbFileContents = JSON.stringify({
     cells: [
       {

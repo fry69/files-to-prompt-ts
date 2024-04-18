@@ -462,7 +462,7 @@ export async function main( args: string[] ): Promise<void> {
         try {
           execSync(`${config.nbconvertName} --version`, { stdio: 'ignore' });
         } catch (err) {
-          error(`Error: ${config.nbconvertName} command not found`);
+          error(`Warning: ${config.nbconvertName} command not found`);
           config.nbconvertName = '';
         }
         break;
