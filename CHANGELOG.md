@@ -1,3 +1,50 @@
+commit def336ee754fbfe9ac7cc4480a99d67ad6ad4398
+Date:   Thu Apr 18 15:34:52 2024 +0200
+
+    Bump version to 0.4.1
+
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+---
+
+commit 438afe1b351fcf748d171821b7a9a19d0d9ac0ee
+Date:   Thu Apr 18 15:32:05 2024 +0200
+
+    fix: check and ignore --nbconvert if command is not found
+
+    - additional test cases
+
+ 3 files changed, 73 insertions(+), 39 deletions(-)
+
+---
+
+commit 39589e1137765ffe2aec22b401a64faff1467274
+Date:   Thu Apr 18 14:57:37 2024 +0200
+
+    Add disclaimer section to README.md
+
+ 1 file changed, 4 insertions(+)
+
+---
+
+commit c9123aeb12538917151b9fe509eb0e8c48f14ece
+Date:   Thu Apr 18 13:43:31 2024 +0200
+
+    fix: error should not get exported
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 36ffcc29b7e20663949cba98b49f2f0f1cea5675
+Date:   Thu Apr 18 13:28:20 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 36 insertions(+)
+
+---
+
 commit 2317d3ff546e8008efa61bfe48df0cdc772794eb
 Date:   Thu Apr 18 13:26:56 2024 +0200
 
