@@ -460,6 +460,12 @@ export async function main( args: string[] ): Promise<void> {
           error('Error: --nbconvert option requires the filename or full path of the tool');
           return;
         }
+        try {
+          execSync(`${config.nbconvertName} --version`, { stdio: 'ignore' });
+        } catch (err) {
+          error(`Error: ${config.nbconvertName} command not found`);
+          config.nbconvertName = '';
+        }
         break;
       case '--format':
         if (i + 1 < args.length) {

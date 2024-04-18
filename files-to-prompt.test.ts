@@ -419,6 +419,28 @@ describe('files-to-prompt.ts', () => {
     nbformat_minor: 4,
   });
 
+  test('should include .ipynb files verbatim whitout --nbconvert', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain(ipynbFileContents);
+   });
+
+   test('should include .ipynb files verbatim when --nbconvert is set to invalid command', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir, '--nbconvert', 'invalid_command'];
+    await runScript(args);
+    expect(stderrOutput).toContain('command not found');
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain(ipynbFileContents);
+   });
+
   test('should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed', async () => {
     const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
     fs.writeFileSync(ipynbFilePath, ipynbFileContents);
