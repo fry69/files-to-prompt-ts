@@ -384,4 +384,62 @@ describe('files-to-prompt.ts', () => {
     expect(stderrOutput).toContain('Error writing to output file');
     expect(stdoutOutput).toBeEmpty();
   });
+
+  const nbconvertTool = 'jupyter-nbconvert';
+  const ipynbFileContents = JSON.stringify({
+    cells: [
+      {
+        cell_type: 'code',
+        execution_count: 1,
+        metadata: {},
+        outputs: [],
+        source: ['print(\'Hello, World!\')'],
+      },
+    ],
+    metadata: {
+      kernelspec: {
+        display_name: 'Python 3 (ipykernel)',
+        language: 'python',
+        name: 'python3',
+      },
+      language_info: {
+        codemirror_mode: {
+          name: 'ipython',
+          version: 3,
+        },
+        file_extension: '.py',
+        mimetype: 'text/x-python',
+        name: 'python',
+        nbconvert_exporter: 'python',
+        pygments_lexer: 'ipython3',
+        version: '3.9.7',
+      },
+    },
+    nbformat: 4,
+    nbformat_minor: 4,
+  });
+
+  test('should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir, '--nbconvert', nbconvertTool, '--format', 'asciidoc'];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain('+*In[1]:*+');
+    expect(stdoutOutput).toContain('print(\'Hello, World!\')');
+  });
+
+  test('should convert .ipynb files to Markdown when --nbconvert --format markdown is passed', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir, '--nbconvert', nbconvertTool, '--format', 'markdown'];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain('```python');
+    expect(stdoutOutput).toContain('print(\'Hello, World!\')');
+  });
 });

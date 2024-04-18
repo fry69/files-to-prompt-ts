@@ -13,9 +13,10 @@ The tool supports processing both individual files and entire directories, and p
 
 This is a TypeScript port of the original `files-to-prompt` tool written in Python by Simon Willison, which is available at [https://github.com/simonw/files-to-prompt](https://github.com/simonw/files-to-prompt).
 
-Additional features not found the original version:
+Additional features not currently found the original version:
 - reading and parsing file paths received via `stdin` (e.g. via pipe from `grep` or `ripgrep`)
 - redirect output to a file with `--output <file>` or `-o <file>`
+- convert Jupyter Notebook `*.ipynb` files on the fly to ascii or markdown with [nbconvert](https://nbconvert.readthedocs.io/en/latest/index.html)
 
 [^1]: The script needs a Typescript engine to run, of course.
 
@@ -55,6 +56,10 @@ Available options:
 - `--ignore-gitignore`: Ignore `.gitignore` files and include all files (default: `false`)
 - `-i, --ignore <pattern>`: Specify one or more patterns to ignore (can be used multiple times)
 - `-o, --output <file>`: Redirect output to `file` (**Note:** `file` will get silently overwritten)
+- `--nbconvert <toolname>`: Name or full path of the installed `nbconvert` tool, e.g. `jupyter-nbconvert`
+- `--format [asciidoc | markdown]`: Output format for the `nbconvert` tool, defaults to `asciidoc`
+
+Jupyter Notebook conversion gets triggered when the `--nbconvert <toolname>` option is set, otherwise `.ipynb` files will get included verbatim in their `JSON` format (including `base64` encoded images etc). Each file conversion will happen in a freshly created temporary directory which will get deleted after each conversion.
 
 Example usage:
 

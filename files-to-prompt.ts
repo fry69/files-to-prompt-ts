@@ -1,7 +1,9 @@
 #!/usr/bin/env bun
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 
 const VERSION = '0.3.0';
 
@@ -28,12 +30,16 @@ const outputConfig: OutputConfig = {
  * @property {boolean} ignoreGitignore - Indicates whether to ignore .gitignore files.
  * @property {string[]} ignorePatterns - An array of patterns to ignore.
  * @property {string[]} gitignoreRules - An array of .gitignore rules.
+ * @property {string} nbconvertName - Filename or full path of nbconvert tool to convert .ipynb files to ASCII or Markdown.
+ * @property {string} convertFormat - The format to convert .ipynb files to ('asciidoc' or 'markdown').
  */
 interface ProcessingConfig {
   includeHidden: boolean;
   ignoreGitignore: boolean;
   ignorePatterns: string[];
   gitignoreRules: string[];
+  nbconvertName: string;
+  convertFormat: 'asciidoc' | 'markdown';
 }
 
 /**
@@ -136,18 +142,23 @@ export async function isBinaryFile(filePath: string, chunkSize: number = 8192): 
  * @async
  * @function processFile
  * @param {string} filePath - The path to the file to process.
+ * @param {ProcessingConfig} config - The processing configuration.
  * @returns {Promise<void>}
  */
-async function processFile(filePath: string): Promise<void> {
+async function processFile(filePath: string, config: ProcessingConfig): Promise<void> {
   try {
     if (await isBinaryFile(filePath)) {
       error(`Warning: Skipping binary file ${filePath}`);
     } else {
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      output(filePath);
-      output('---');
-      output(fileContents);
-      output('---');
+      if (config.nbconvertName && filePath.endsWith('.ipynb')) {
+        await convertIPythonNotebook(filePath, config);
+      } else {
+        const fileContents = fs.readFileSync(filePath, 'utf8');
+        output(filePath);
+        output('---');
+        output(fileContents);
+        output('---');
+      }
     }
   } catch (err) {
     // This should not happen unless e.g. files get deleted while this tool runs
@@ -155,6 +166,43 @@ async function processFile(filePath: string): Promise<void> {
     // Remove `Bun.sleep()` from the test script and you will end up here
     // TODO: write test case (not trivial)
     error(`Error processing file ${filePath}: ${err}`);
+  }
+}
+
+async function convertIPythonNotebook(filePath: string, config: ProcessingConfig): Promise<void> {
+  const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'files-to-prompt-'));
+  const tempFilePath = path.join(tempDir, path.basename(filePath));
+
+  try {
+    // Copy the .ipynb file to the temporary directory
+    await fs.promises.copyFile(filePath, tempFilePath);
+
+    // Run nbconvert with the appropriate command-line options
+    const convertCommand = `${config.nbconvertName} --to ${config.convertFormat} "${tempFilePath}"`;
+    try {
+      execSync(convertCommand, { stdio: 'inherit' });
+    } catch (err) {
+      error(`Error running ${config.nbconvertName}: ${err}`);
+      return;
+    }
+
+    // Determine the correct file extension based on the conversion format
+    const convertedFileExtension = config.convertFormat === 'markdown' ? '.md' : `.${config.convertFormat}`;
+
+    // Read the converted file from the temporary directory
+    const convertedFilePath = path.join(tempDir, `${path.basename(filePath, '.ipynb')}${convertedFileExtension}`);
+    const convertedFileContents = await fs.promises.readFile(convertedFilePath, 'utf8');
+
+    // Output the converted file with the original file name and path
+    output(`${filePath}`);
+    output('---');
+    output(convertedFileContents);
+    output('---');
+  } catch (err) {
+    error(`Error converting .ipynb file ${filePath}: ${err}`);
+  } finally {
+    // Clean up the temporary directory
+    await fs.promises.rm(tempDir, { recursive: true, force: true });
   }
 }
 
@@ -226,7 +274,7 @@ async function processPath(
   if (fs.statSync(pathToProcess).isFile()) {
     // Process a single file
     if (!shouldIgnore(pathToProcess, config)) {
-      await processFile(pathToProcess);
+      await processFile(pathToProcess, config);
     }
   } else if (fs.statSync(pathToProcess).isDirectory()) {
     let newConfig: ProcessingConfig = config; // intentional reference copy
@@ -252,7 +300,7 @@ async function processPath(
 
     for (const file of files) {
       if (!shouldIgnore(file, newConfig)) {
-        await processFile(file);
+        await processFile(file, newConfig);
       }
     }
 
@@ -361,7 +409,9 @@ export async function main( args: string[] ): Promise<void> {
     ignoreGitignore: false,
     ignorePatterns: [],
     gitignoreRules: [],
-  };
+    nbconvertName: '',
+    convertFormat: 'asciidoc',
+   };
   let pathsToProcess: string[] = [];
 
   for (let i = 0; i < args.length; i++) {
@@ -400,6 +450,28 @@ export async function main( args: string[] ): Promise<void> {
           }
         } else {
           error('Error: --output option requires a file path');
+          return;
+        }
+        break;
+      case '--nbconvert':
+        if (i + 1 < args.length) {
+          config.nbconvertName = args[++i];
+        } else {
+          error('Error: --nbconvert option requires the filename or full path of the tool');
+          return;
+        }
+        break;
+      case '--format':
+        if (i + 1 < args.length) {
+          const format = args[++i];
+          if (format === 'asciidoc' || format === 'markdown') {
+            config.convertFormat = format;
+          } else {
+            error(`Error: Unsupported format '${format}', use 'asciidoc' or 'markdown'`);
+            return;
+          }
+        } else {
+          error('Error: --format option requires a format');
           return;
         }
         break;
