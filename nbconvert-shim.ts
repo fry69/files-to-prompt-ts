@@ -25,8 +25,8 @@ function writeMarkdown(filename: string): void {
 if (import.meta.main) {
   const args = process.argv.slice(2);
 
+  // needed to satisfy test for existence of nbconvert command
   if (args[0] === '--version') {
-    // needed to satisfy test for existence of nbconvert command
     console.error('nbconvert-shim v0.0.0');
     process.exit(0);
   }
