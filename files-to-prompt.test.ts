@@ -432,7 +432,7 @@ describe('files-to-prompt.ts', () => {
     expect(stdoutOutput).toContain(ipynbFileContents);
    });
 
-   test('should include .ipynb files verbatim when --nbconvert is set to invalid command', async () => {
+  test('should include .ipynb files verbatim when --nbconvert is set to invalid command', async () => {
     const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
     fs.writeFileSync(ipynbFilePath, ipynbFileContents);
 
@@ -460,6 +460,30 @@ describe('files-to-prompt.ts', () => {
     fs.writeFileSync(ipynbFilePath, ipynbFileContents);
 
     const args = [testDir, '--nbconvert', nbconvertTool, '--format', 'markdown'];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain('```python');
+    expect(stdoutOutput).toContain('print(\'Hello, World!\')');
+  });
+
+  test('should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed using internal converter', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir, '--nbconvert', 'internal', '--format', 'asciidoc'];
+    await runScript(args);
+    expect(stderrOutput).toBeEmpty();
+    expect(stdoutOutput).toContain(ipynbFilePath);
+    expect(stdoutOutput).toContain('+*In[1]:*+');
+    expect(stdoutOutput).toContain('print(\'Hello, World!\')');
+  });
+
+  test('should convert .ipynb files to Markdown when --nbconvert --format markdown is passed using internal converter', async () => {
+    const ipynbFilePath = path.join(testDir, 'notebook.ipynb');
+    fs.writeFileSync(ipynbFilePath, ipynbFileContents);
+
+    const args = [testDir, '--nbconvert', 'internal', '--format', 'markdown'];
     await runScript(args);
     expect(stderrOutput).toBeEmpty();
     expect(stdoutOutput).toContain(ipynbFilePath);

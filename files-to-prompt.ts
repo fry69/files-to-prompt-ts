@@ -164,18 +164,25 @@ export async function isBinaryFile(filePath: string, chunkSize: number = 8192): 
  */
 async function processFile(filePath: string, config: ProcessingConfig): Promise<void> {
   try {
-    if (await isBinaryFile(filePath)) {
+    if (config.nbconvertName && filePath.endsWith('.ipynb')) {
+      // Handle Jupyter Notebook files first
+      if (config.nbconvertName === 'internal') {
+        // internal conversion requested
+        await convertIPythonNotebookInternal(filePath, config);
+      } else {
+        // external conversion requested
+        await convertIPythonNotebookExternal(filePath, config);
+      }
+    } else if (await isBinaryFile(filePath)) {
+      // Skip binary files
       error(`Warning: Skipping binary file ${filePath}`);
     } else {
-      if (config.nbconvertName && filePath.endsWith('.ipynb')) {
-        await convertIPythonNotebook(filePath, config);
-      } else {
-        const fileContents = fs.readFileSync(filePath, 'utf8');
-        output(filePath);
-        output('---');
-        output(fileContents);
-        output('---');
-      }
+      // Put everything else verbatim on the output stream
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      output(filePath);
+      output('---');
+      output(fileContents);
+      output('---');
     }
   } catch (err) {
     // This should not happen unless e.g. files get deleted while this tool runs
@@ -186,7 +193,78 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
   }
 }
 
-async function convertIPythonNotebook(filePath: string, config: ProcessingConfig): Promise<void> {
+async function convertIPythonNotebookInternal(filePath: string, config: ProcessingConfig): Promise<void> {
+  try {
+    const ipynbContents = await fs.promises.readFile(filePath, 'utf8');
+    const ipynbData = JSON.parse(ipynbContents);
+
+    let convertedContent = '';
+    if (config.convertFormat === 'asciidoc') {
+      convertedContent = convertToAsciidoc(ipynbData);
+    } else {
+      convertedContent = convertToMarkdown(ipynbData);
+    }
+
+    output(`${filePath}`);
+    output('---');
+    output(convertedContent);
+    output('---');
+  } catch (err) {
+    error(`Error converting .ipynb file ${filePath}: ${err}`);
+  }
+}
+
+function convertToAsciidoc(ipynbData: any): string {
+  let asciidocContent = '';
+
+  for (const cell of ipynbData.cells) {
+    switch (cell.cell_type) {
+      case 'code':
+        asciidocContent += `+*In[${cell.execution_count}]:*+\n[source, ipython3]\n----\n${cell.source.join('')}\n----\n\n`;
+        for (const output of cell.outputs) {
+          if (output.data['text/plain']) {
+            asciidocContent += `+*Out[${cell.execution_count}]:*+\n----\n${output.data['text/plain']}\n----\n\n`;
+          }
+          // TODO: handle images
+          // if (output.data['image/png']) {
+          //   asciidocContent += `+*Out[${cell.execution_count}]:*+\n[PNG Image]\n\n`;
+          // }
+        }
+        break;
+      case 'markdown':
+        asciidocContent += `${cell.source.join('')}\n\n`;
+        break;
+    }
+  }
+
+  return asciidocContent;
+}
+
+function convertToMarkdown(ipynbData: any): string {
+  let markdownContent = '';
+
+  for (const cell of ipynbData.cells) {
+    switch (cell.cell_type) {
+      case 'code':
+        markdownContent += `\`\`\`python\n${cell.source.join('')}\n\`\`\`\n\n`;
+        for (const output of cell.outputs) {
+          if (output.data['text/plain']) {
+            markdownContent += `\`\`\`\n${output.data['text/plain']}\n\`\`\`\n\n`;
+          }
+          // TODO: handle images
+          // if (output.data['image/png']) {
+          // }
+        }
+        break;
+      case 'markdown':
+        markdownContent += `${cell.source.join('')}\n\n`;
+        break;
+      }
+  }
+  return markdownContent;
+}
+
+async function convertIPythonNotebookExternal(filePath: string, config: ProcessingConfig): Promise<void> {
   const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'files-to-prompt-'));
   const tempFilePath = path.join(tempDir, path.basename(filePath));
 
@@ -473,14 +551,16 @@ export async function main( args: string[] ): Promise<void> {
         if (i + 1 < args.length) {
           config.nbconvertName = args[++i];
         } else {
-          error('Error: --nbconvert option requires the filename or full path of the tool');
+          error('Error: --nbconvert option requires the filename or full path of the tool or \'internal\'');
           return;
         }
-        try {
-          execSync(`${config.nbconvertName} --version`, { stdio: 'ignore' });
-        } catch (err) {
-          error(`Warning: ${config.nbconvertName} command not found`);
-          config.nbconvertName = '';
+        if (!(config.nbconvertName === 'internal')) {
+          try {
+            execSync(`${config.nbconvertName} --version`, { stdio: 'ignore' });
+          } catch (err) {
+            error(`Warning: ${config.nbconvertName} command not found`);
+            config.nbconvertName = '';
+          }
         }
         break;
       case '--format':
