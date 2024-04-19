@@ -48,7 +48,7 @@ const outputConfig: OutputConfig = {
  * @property {string[]} ignorePatterns - An array of patterns to ignore.
  * @property {string[]} gitignoreRules - An array of .gitignore rules.
  * @property {string} nbconvertName - Filename or full path of nbconvert tool to convert .ipynb files to ASCII or Markdown.
- * @property {string} convertFormat - The format to convert .ipynb files to ('asciidoc' or 'markdown').
+ * @property {string} nbconvertFormat - The format to convert .ipynb files to ('asciidoc' or 'markdown').
  */
 interface ProcessingConfig {
   includeHidden: boolean;
@@ -56,7 +56,7 @@ interface ProcessingConfig {
   ignorePatterns: string[];
   gitignoreRules: string[];
   nbconvertName: string;
-  convertFormat: 'asciidoc' | 'markdown';
+  nbconvertFormat: 'asciidoc' | 'markdown';
 }
 
 /**
@@ -168,10 +168,10 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
       // Handle Jupyter Notebook files first
       if (config.nbconvertName === 'internal') {
         // internal conversion requested
-        await convertIPythonNotebookInternal(filePath, config);
+        await convertNotebookInternal(filePath, config);
       } else {
         // external conversion requested
-        await convertIPythonNotebookExternal(filePath, config);
+        await convertNotebookExternal(filePath, config);
       }
     } else if (await isBinaryFile(filePath)) {
       // Skip binary files
@@ -194,20 +194,20 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
 }
 
 /**
- * Converts an IPython Notebook (`.ipynb`) file to the specified format using internal conversion.
+ * Converts a Jupyter Notebook file to the specified format using internal conversion.
  * @async
- * @function convertIPythonNotebookInternal
+ * @function convertNotebookInternal
  * @param {string} filePath - The path to the IPython Notebook file.
  * @param {ProcessingConfig} config - The processing configuration.
  * @returns {Promise<void>}
  */
-async function convertIPythonNotebookInternal(filePath: string, config: ProcessingConfig): Promise<void> {
+async function convertNotebookInternal(filePath: string, config: ProcessingConfig): Promise<void> {
   try {
     const ipynbContents = await fs.promises.readFile(filePath, 'utf8');
     const ipynbData = JSON.parse(ipynbContents);
 
     let convertedContent = '';
-    if (config.convertFormat === 'asciidoc') {
+    if (config.nbconvertFormat === 'asciidoc') {
       convertedContent = convertToAsciidoc(ipynbData);
     } else {
       convertedContent = convertToMarkdown(ipynbData);
@@ -223,7 +223,7 @@ async function convertIPythonNotebookInternal(filePath: string, config: Processi
 }
 
 /**
- * Converts an IPython Notebook (`.ipynb`) file to AsciiDoc format.
+ * Converts a Jupyter Notebook file to AsciiDoc format.
  * @function convertToAsciidoc
  * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
  * @returns {string} - The AsciiDoc content.
@@ -255,7 +255,7 @@ function convertToAsciidoc(ipynbData: any): string {
 }
 
 /**
- * Converts an IPython Notebook (`.ipynb`) file to Markdown format.
+ * Converts a Jupyter Notebook file to Markdown format.
  * @function convertToMarkdown
  * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
  * @returns {string} - The Markdown content.
@@ -285,14 +285,14 @@ function convertToMarkdown(ipynbData: any): string {
 }
 
 /**
- * Converts an IPython Notebook (`.ipynb`) file to the specified format using external conversion.
+ * Converts a Jupyter Notebook file to the specified format using external conversion.
  * @async
  * @function convertIPythonNotebookExternal
  * @param {string} filePath - The path to the IPython Notebook file.
  * @param {ProcessingConfig} config - The processing configuration.
  * @returns {Promise<void>}
  */
-async function convertIPythonNotebookExternal(filePath: string, config: ProcessingConfig): Promise<void> {
+async function convertNotebookExternal(filePath: string, config: ProcessingConfig): Promise<void> {
   const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'files-to-prompt-'));
   const tempFilePath = path.join(tempDir, path.basename(filePath));
 
@@ -301,7 +301,7 @@ async function convertIPythonNotebookExternal(filePath: string, config: Processi
     await fs.promises.copyFile(filePath, tempFilePath);
 
     // Run nbconvert with the appropriate command-line options
-    const convertCommand = `${config.nbconvertName} --to ${config.convertFormat} "${tempFilePath}"`;
+    const convertCommand = `${config.nbconvertName} --to ${config.nbconvertFormat} "${tempFilePath}"`;
     try {
       execSync(convertCommand, { stdio: 'inherit' });
     } catch (err) {
@@ -310,7 +310,7 @@ async function convertIPythonNotebookExternal(filePath: string, config: Processi
     }
 
     // Determine the correct file extension based on the conversion format
-    const convertedFileExtension = config.convertFormat === 'markdown' ? '.md' : `.${config.convertFormat}`;
+    const convertedFileExtension = config.nbconvertFormat === 'markdown' ? '.md' : `.${config.nbconvertFormat}`;
 
     // Read the converted file from the temporary directory
     const convertedFilePath = path.join(tempDir, `${path.basename(filePath, '.ipynb')}${convertedFileExtension}`);
@@ -519,29 +519,21 @@ function isValidFilePath(filePath: string): boolean {
 }
 
 /**
- * The main entry point of the script.
- * @async
- * @function main
- * @param {string[]} args - The command-line arguments.
- * @returns {Promise<void>}
+ * Parses the command-line arguments and updates the processing configuration and output configuration.
+ * @function parseCommandLineArgs
+ * @param {string[]} args - The command-line arguments array to read from.
+ * @param {string[]} pathsToProcess - The array with paths to process to append to.
+ * @param {ProcessingConfig} config - The processing configuration to modify.
+ * @param {OutputConfig} outputConfig - The output configuration to modify.
+ * @returns {boolean} - A boolean indicating if an error occurred, true means error.
  */
-export async function main( args: string[] ): Promise<void> {
-  const config: ProcessingConfig = {
-    includeHidden: false,
-    ignoreGitignore: false,
-    ignorePatterns: [],
-    gitignoreRules: [],
-    nbconvertName: '',
-    convertFormat: 'asciidoc',
-   };
-  let pathsToProcess: string[] = [];
-
+function parseCommandLineArgs(args: string[], pathsToProcess: string[], config: ProcessingConfig, outputConfig: OutputConfig): boolean {
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     switch (arg) {
       case '--version':
         output(`files-to-prompt.ts version ${VERSION}`);
-        return;
+        return false;
       case '--include-hidden':
         config.includeHidden = true;
         break;
@@ -554,7 +546,7 @@ export async function main( args: string[] ): Promise<void> {
           config.ignorePatterns.push(args[++i]);
         } else {
           error('Error: --ignore option requires a pattern');
-          return;
+          return true;
         }
         break;
       case '--output':
@@ -568,11 +560,11 @@ export async function main( args: string[] ): Promise<void> {
           } catch (err) {
             error(`Error writing to output file ${outputConfig.stdoutFile}: ${err}`);
             outputConfig.stdoutFile = '';
-            return;
-          }
+            return true;
+            }
         } else {
           error('Error: --output option requires a file path');
-          return;
+          return true;
         }
         break;
       case '--nbconvert':
@@ -580,7 +572,7 @@ export async function main( args: string[] ): Promise<void> {
           config.nbconvertName = args[++i];
         } else {
           error('Error: --nbconvert option requires the filename or full path of the tool or \'internal\'');
-          return;
+          return true;
         }
         if (!(config.nbconvertName === 'internal')) {
           try {
@@ -595,23 +587,51 @@ export async function main( args: string[] ): Promise<void> {
         if (i + 1 < args.length) {
           const format = args[++i];
           if (format === 'asciidoc' || format === 'markdown') {
-            config.convertFormat = format;
+            config.nbconvertFormat = format;
           } else {
             error(`Error: Unsupported format '${format}', use 'asciidoc' or 'markdown'`);
-            return;
+            return true;
           }
         } else {
           error('Error: --format option requires a format');
-          return;
+          return true;
         }
         break;
       default:
         if (arg.startsWith('-')) {
           error(`Error: Unsupported option '${arg}'`);
-          return;
+          return true;
         }
+        // Assume it's a file or directory path to process
         pathsToProcess.push(arg);
     }
+  }
+
+  return false;
+}
+
+/**
+ * The main entry point of the script.
+ * @async
+ * @function main
+ * @param {string[]} args - The command-line arguments.
+ * @returns {Promise<void>}
+ */
+export async function main( args: string[] ): Promise<void> {
+  const config: ProcessingConfig = {
+    includeHidden: false,
+    ignoreGitignore: false,
+    ignorePatterns: [],
+    gitignoreRules: [],
+    nbconvertName: '',
+    nbconvertFormat: 'asciidoc',
+  };
+  const pathsToProcess: string[] = [];
+
+  const hasError = parseCommandLineArgs(args, pathsToProcess, config, outputConfig);
+
+  if (hasError) {
+    return;
   }
 
   // Process input from stdin
