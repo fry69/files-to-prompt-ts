@@ -1,3 +1,75 @@
+commit 45e4c7980a8a6041120b55f66600a1f5022d6873
+Date:   Fri Apr 19 17:35:32 2024 +0200
+
+    build: fts-v0.5.0-min.js
+
+ 1 file changed, 3 insertions(+)
+
+---
+
+commit 44c642972ed6a0d1e6c4b2388cd3dd8ab560104d
+Date:   Fri Apr 19 17:33:57 2024 +0200
+
+    Bump version to 0.5.0
+
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+---
+
+commit 5ce14cf0f3faae4c6169de4b24a749c30f7c5437
+Date:   Fri Apr 19 17:27:40 2024 +0200
+
+    doc: update test results
+
+ 1 file changed, 39 insertions(+), 37 deletions(-)
+
+---
+
+commit b39065b342e46278b25ced40a5cef97163f18915
+Date:   Fri Apr 19 17:24:15 2024 +0200
+
+    doc: documentation for internal Jupyter Notebook parser
+
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+---
+
+commit 9c8093ad81c1718c0d3ac6e2cb3111fe8fcadef2
+Date:   Fri Apr 19 17:14:28 2024 +0200
+
+    feat: add internal parser for Jupyter Notebook JSON files
+
+ 2 files changed, 122 insertions(+), 18 deletions(-)
+
+---
+
+commit e966e92dbde4af0e71900dbb767b643b32892fb3
+Date:   Fri Apr 19 13:26:23 2024 +0200
+
+    doc: fix score badge link in README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 2465efbdc680fed6f7f79a2232724e482b410ff5
+Date:   Fri Apr 19 11:34:06 2024 +0200
+
+    doc: fix wording and overlinking in README.md
+
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+---
+
+commit 21b41e090b4f4da31d758e88a18aa7f652f17c38
+Date:   Fri Apr 19 11:28:00 2024 +0200
+
+    doc: fix minified link in README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
 commit d85fd744dc7607cbc5dd2fe7b64b2ca47ec3ddad
 Date:   Fri Apr 19 11:05:21 2024 +0200
 
