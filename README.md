@@ -1,7 +1,7 @@
 # files-to-prompt-ts
 
 [![JSR](https://jsr.io/badges/@fry69/files-to-prompt-ts)](https://jsr.io/@fry69/files-to-prompt-ts)
-[![JSR Score](https://jsr.io/badges/@fry69/files-to-prompt-ts/score)](https://jsr.io/@fry69/files-to-prompt-ts)
+[![JSR Score](https://jsr.io/badges/@fry69/files-to-prompt-ts/score)](https://jsr.io/@fry69/files-to-prompt-ts/score)
 
 A command-line tool to concatenate files and directories in a structured way to a single prompt for use with large language models and other applications.
 
