@@ -20,7 +20,8 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 - Allows ignoring files based on patterns or .gitignore rules
 - Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown
 - Supports redirecting output to a file
-- Runs on the Bun runtime environment
+- Runs out-of-box on the Bun runtime environment
+- Compatible with Deno and Node (minified)
 
 ## Installation
 
@@ -45,6 +46,8 @@ curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.3/files-to-
 ```
 
 Don't forget to make the script executable with `chmod +x ftp.ts` and move it to a location where it is accessible from your system's `$PATH` (optional).
+
+Minified builds of this script can be found in the [minified](https://github.com/fry69/files-to-prompt-ts/minified) directory (generated with `bun build --minify`). These builds are compatible with [Node](https://nodejs.org/)
 
 ## Usage
 
@@ -172,8 +175,9 @@ Ran 37 tests across 1 files. [405.00ms]
 
 ## Compatibility
 
-The script is mostly compatible with [Deno](https://deno.com/), see [issues](https://github.com/fry69/files-to-prompt-ts/issues) for details.
-Transpilation to pure Javascript / [Node](https://nodejs.org/en) is (currently) not supported.
+This script is compatible with [Deno](https://deno.com/) (e.g. `deno run -A ./files-to-prompt.ts [paths]`).
+
+The minified version of this script is compatible with [Node](https://nodejs.org/en) (e.g. `node minified/fts-v0.4.3.min.js [paths]`).
 
 ## Contributing
 
