@@ -18,7 +18,7 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 - Extracts the contents of text files and presents them in a formatted way
 - Supports including or excluding hidden files and directories
 - Allows ignoring files based on patterns or .gitignore rules
-- Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown
+- Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown (external/internal parser)
 - Supports redirecting output to a file
 - Runs out-of-box on the Bun runtime environment
 - Compatible with Deno and Node.js (minified)
@@ -61,7 +61,8 @@ The tool accepts the following command-line arguments:
 --ignore-gitignore        Ignore .gitignore files
 -i, --ignore <pattern>    Ignore files matching the specified pattern
 -o, --output <file>       Redirect output to the specified file
---nbconvert <command>     Specify the nbconvert command to use for .ipynb files
+--nbconvert <command>     Specify the external nbconvert command to use for .ipynb files
+                          Specify 'internal' for internal parser
 --format <format>         Specify the format to convert .ipynb files to ('asciidoc' or 'markdown')
 [paths]                   One or more file or directory paths to process
 ```
@@ -84,6 +85,8 @@ If the `--nbconvert` option is provided, the tool will attempt to convert any `.
 Without conversion (or if the provided command cannot be found) `.ipynb` files will get included verbatim in their `JSON` format (including `base64` encoded images etc).
 
 Internally each file conversion happens in a freshly created temporary directory (via `mktemp` API), which gets deleted automatically after successful (or unsucessful) completion.
+
+> **New:** Crazy fast (100x compared to `nbconvert`) internal parser for conversion, use with `--nbconvert internal`
 
 ### Example usage:
 
