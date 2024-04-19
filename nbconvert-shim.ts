@@ -1,5 +1,12 @@
 #!/usr/bin/env bun
 
+/**
+ * nbconvert-shim.ts
+ *
+ * Helper tool to speed up testing, mimicking `nbconvert`.
+ * It creates output files with fixed content for test cases in `files-to-prompt.test.ts`.
+ */
+
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -20,7 +27,7 @@ if (import.meta.main) {
 
   if (args[0] === '--version') {
     // needed to satisfy test for existence of nbconvert command
-    console.error('nbconvert-shim.ts v0.0.0');
+    console.error('nbconvert-shim v0.0.0');
     process.exit(0);
   }
 
