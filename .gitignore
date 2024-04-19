@@ -176,3 +176,8 @@ dist
 
 # Private trash folder
 .attic
+
+# Exclude Deno runtime types
+# to make VSCode happy generate them for yourself with
+# deno types > deno_runtime.d.ts
+deno_runtime.d.ts
