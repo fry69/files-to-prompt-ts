@@ -3,9 +3,26 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 
 const VERSION = '0.4.2';
+
+/**
+ * Represents compatibility configuration with various engines.
+ * @interface ComaptConfig
+ * @property {boolean} isDeno - Set when the Deno runtime was detected
+ * @property {boolean} isNode - Set when the Node runtime was detected
+ */
+interface CompatConfig {
+  isDeno: boolean;
+  isNode: boolean;
+}
+
+const compatConfig: CompatConfig = {
+  isDeno: false,
+  isNode: false,
+}
 
 /**
  * Represents the configuration for output.
@@ -490,7 +507,8 @@ export async function main( args: string[] ): Promise<void> {
   }
 
   // Process input from stdin
-  if (!process.stdin.isTTY) {
+  if ((compatConfig.isNode && !process.stdin.isTTY) ||
+      (compatConfig.isDeno && !Deno.stdin.isTerminal()))  {
     const stdinData = await readStdin();
     const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
     pathsToProcess.push(...filePathsFromStdin);
@@ -510,10 +528,13 @@ export async function main( args: string[] ): Promise<void> {
 // main() may not be called here when this script gets imported in the test script
 // call the main function with the appropriate arguments
 // TODO: write test case (not trivial)
-if (import.meta.main) {
-  if (typeof (globalThis as any).Deno !== 'undefined') {
-    await main((globalThis as any).Deno.args);
+if (import.meta.main || (process.argv[1] === fileURLToPath(import.meta.url))) {
+  if (typeof Deno !== 'undefined') {
+    compatConfig.isDeno = true;
+    await main(Deno.args);
   } else {
+    // for now Bun and Node can be considered equal
+    compatConfig.isNode = true;
     await main(process.argv.slice(2));
   }
 }
