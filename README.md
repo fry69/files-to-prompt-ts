@@ -47,7 +47,7 @@ curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.3/files-to-
 
 Don't forget to make the script executable with `chmod +x ftp.ts` and move it to a location where it is accessible from your system's `$PATH` (optional).
 
-Minified builds of this script can be found in the [minified](https://github.com/fry69/files-to-prompt-ts/minified) directory (generated with `bun build --minify`). These builds are compatible with [Node](https://nodejs.org/)
+Minified builds of this script can be found in the [minified](https://github.com/fry69/files-to-prompt-ts/tree/main/minified) directory (generated via `bun build --minify`). These builds are compatible with [Node](https://nodejs.org/)
 
 ## Usage
 
