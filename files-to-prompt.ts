@@ -9,7 +9,7 @@ import { execSync } from 'node:child_process';
 const VERSION = '0.5.0';
 
 /**
- * Represents compatibility configuration with various engines.
+ * Represents runtime compatibility configuration with various engines.
  * @interface ComaptConfig
  * @property {boolean} isDeno - Set when the Deno runtime was detected
  * @property {boolean} isNode - Set when the Node runtime was detected
@@ -193,6 +193,14 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
   }
 }
 
+/**
+ * Converts an IPython Notebook (`.ipynb`) file to the specified format using internal conversion.
+ * @async
+ * @function convertIPythonNotebookInternal
+ * @param {string} filePath - The path to the IPython Notebook file.
+ * @param {ProcessingConfig} config - The processing configuration.
+ * @returns {Promise<void>}
+ */
 async function convertIPythonNotebookInternal(filePath: string, config: ProcessingConfig): Promise<void> {
   try {
     const ipynbContents = await fs.promises.readFile(filePath, 'utf8');
@@ -214,6 +222,12 @@ async function convertIPythonNotebookInternal(filePath: string, config: Processi
   }
 }
 
+/**
+ * Converts an IPython Notebook (`.ipynb`) file to AsciiDoc format.
+ * @function convertToAsciidoc
+ * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
+ * @returns {string} - The AsciiDoc content.
+ */
 function convertToAsciidoc(ipynbData: any): string {
   let asciidocContent = '';
 
@@ -240,6 +254,12 @@ function convertToAsciidoc(ipynbData: any): string {
   return asciidocContent;
 }
 
+/**
+ * Converts an IPython Notebook (`.ipynb`) file to Markdown format.
+ * @function convertToMarkdown
+ * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
+ * @returns {string} - The Markdown content.
+ */
 function convertToMarkdown(ipynbData: any): string {
   let markdownContent = '';
 
@@ -264,6 +284,14 @@ function convertToMarkdown(ipynbData: any): string {
   return markdownContent;
 }
 
+/**
+ * Converts an IPython Notebook (`.ipynb`) file to the specified format using external conversion.
+ * @async
+ * @function convertIPythonNotebookExternal
+ * @param {string} filePath - The path to the IPython Notebook file.
+ * @param {ProcessingConfig} config - The processing configuration.
+ * @returns {Promise<void>}
+ */
 async function convertIPythonNotebookExternal(filePath: string, config: ProcessingConfig): Promise<void> {
   const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'files-to-prompt-'));
   const tempFilePath = path.join(tempDir, path.basename(filePath));
