@@ -38,11 +38,11 @@ bun run files-to-prompt.ts [options] [paths]
 Alternatively you can download the script directly:
 - from jsr.io:
 ```shell
-curl https://jsr.io/@fry69/files-to-prompt-ts/0.4.3/files-to-prompt.ts > ftp.ts
+curl https://jsr.io/@fry69/files-to-prompt-ts/0.5.0/files-to-prompt.ts > ftp.ts
 ```
 - from GitHub:
 ```shell
-curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.4.3/files-to-prompt.ts > ftp.ts
+curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.5.0/files-to-prompt.ts > ftp.ts
 ```
 
 Don't forget to make the script executable with `chmod +x ftp.ts` and move it to a location where it is accessible from your system's `$PATH` (optional).
@@ -120,7 +120,7 @@ This repository includes a comprehensive test script to ensure `files-to-prompt.
 bun test --coverage
 ```
 
-Recent test status (v0.4.3 using nbconvert-shim):
+Recent test status (v0.5.0 using nbconvert-shim):
 
 ```
 bun test v1.1.4 (fbe2fe0c)
