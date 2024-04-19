@@ -1,3 +1,83 @@
+commit d85fd744dc7607cbc5dd2fe7b64b2ca47ec3ddad
+Date:   Fri Apr 19 11:05:21 2024 +0200
+
+    build: fts-v0.4.3-min.js
+
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+---
+
+commit aca86d350c50cfc7ae4a67fdf13370efe7d9e576
+Date:   Fri Apr 19 11:01:45 2024 +0200
+
+    Bump version to 0.4.3
+
+ 4 files changed, 41 insertions(+), 41 deletions(-)
+
+---
+
+commit 6a505716aff851ab2af3f7c6a3ebc7e124d7354e
+Date:   Fri Apr 19 10:46:56 2024 +0200
+
+    feat: Deno and Node compatibility
+    
+    - test Deno with `deno run -A ./files-to-prompt.ts testfolder`
+    - Node will be supported by providing a minified version of this script
+      generated with `bun build --minify`
+    - minified version already works with Node on my machine
+
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+---
+
+commit 4a37a2e729f89ee7fb8fdbc3fc9373869bfd24c3
+Date:   Fri Apr 19 10:46:41 2024 +0200
+
+    chore: ignore generated Deno types, needed for compatibility testing
+
+ 1 file changed, 5 insertions(+)
+
+---
+
+commit fd6a30923bd6cc8d6e9c4aed8f0f3edb6e7c18a7
+Date:   Fri Apr 19 07:18:04 2024 +0200
+
+    doc: another small fix in nbconvert-shim.ts
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit cd9013b84a82e066c820f6abc8f82fd6b40c2adf
+Date:   Fri Apr 19 07:06:38 2024 +0200
+
+    doc: nbconvert-shim.ts
+
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+---
+
+commit 1d8740644240f9dcb45085197ed7aeaf93c81238
+Date:   Thu Apr 18 22:02:37 2024 +0200
+
+    Update README.md with fast tests
+
+ 1 file changed, 37 insertions(+), 41 deletions(-)
+
+---
+
+commit cb548fdbfa6d3ed8a0f494cb5c5ad9ac7acd7acf
+Date:   Thu Apr 18 21:54:15 2024 +0200
+
+    feat: nbconvert-shim for fast testing
+    
+    - produces the same output as the real nbconvert for test cases
+    - optionally the real nbconvert can still be called for testing
+
+ 3 files changed, 47 insertions(+), 2 deletions(-)
+
+---
+
 commit 4d465ca6055db3efaa1930b2c56ecc84f7c5943c
 Date:   Thu Apr 18 18:06:36 2024 +0200
 
