@@ -1,7 +1,7 @@
 {
   "name": "@fry69/files-to-prompt-ts",
   "module": "files-to-prompt.ts",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "repository": "https://github.com/fry69/files-to-prompt-ts",
   "devDependencies": {
     "@types/bun": "latest"
@@ -11,6 +11,6 @@
   },
   "type": "module",
   "scripts": {
-    "test": "bun test ./files-to-prompt.test.ts"
+    "test": "bun test --coverage ./files-to-prompt.test.ts"
   }
 }
