@@ -20,7 +20,7 @@ git for-each-ref --sort=-taggerdate --format='## %(refname:short)%n%(contents)%n
 
 - `jsr.json` - `"version"` property value
 
-> **Note:** Updating this version string will trigger the [publish.yml](https://github.com/fry69/files-to-prompt-ts/blob/main/.github/workflows/publish.yml) workflow and upload the repository to `jsr.io` on push to GitHub
+> **Note:** Updating this version string will trigger the [publish.yml](https://github.com/fry69/files-to-prompt-ts/blob/main/.github/workflows/publish.yml) workflow and upload the repository to `jsr.io` after **push** to GitHub
 
 ### General Notes
 
