@@ -121,6 +121,8 @@ This repository includes a comprehensive test script to ensure `files-to-prompt.
 bun test --coverage
 ```
 
+## Test status and Coverage
+
 Recent test status (v0.5.0, using nbconvert-shim):
 
 ```
