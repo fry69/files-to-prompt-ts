@@ -1,8 +1,19 @@
 ## Release process
 
-### Version update
+1. update version strings (but not in `jsr.json` yet)
+2. commit 'Bump version to vx.y.z'
+3. tag the commit with the new version string (**with annotation**)
+4. push to github (this will add updated test output to `README.md`)
+5. push to github with --tags (does not work @step4? why?)
+6. create release on GitHub (with annotation text from @step3)
+7. pull from github (to get updated `README.md` and minified build)
+8. update version string in `jsr.json` 
+9. commit 'Bump jsr.io to vx.y.z'
+10. generate new `CHANGELOG.md`
+11. commit 'doc: update changelog'
+12. push to github (this will upload the fresh repository snapshot to `jsr.io`)
 
-Update version string in
+### Version string update
 
 - `package.json` - `"version"` property value
 - `files-to-prompt.ts` - `VERSION` variable at the top of the script
@@ -20,7 +31,7 @@ git for-each-ref --sort=-taggerdate --format='## %(refname:short)%n%(contents)%n
 
 - `jsr.json` - `"version"` property value
 
-> **Note:** Updating this version string will trigger the [publish.yml](https://github.com/fry69/files-to-prompt-ts/blob/main/.github/workflows/publish.yml) workflow and upload the repository to `jsr.io` after **push** to GitHub
+> **Note:** Updating this version string will trigger the [publish.yml](https://github.com/fry69/files-to-prompt-ts/blob/main/.github/workflows/publish.yml) workflow and upload the repository files to `jsr.io` after **push** to GitHub
 
 ### General Notes
 
