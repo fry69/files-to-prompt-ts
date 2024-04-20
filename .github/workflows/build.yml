@@ -27,21 +27,21 @@ jobs:
 
     - name: Build minified version
       run: |
-        bun build --minify files-to-prompt.ts --outfile minified/fts-${{ github.ref_name }}-min.js
+        bun build --minify files-to-prompt.ts --outfile minified/ftp-${{ github.ref_name }}-min.js
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: fts-minified
-        path: minified/fts-${{ github.ref_name }}-min.js
+        name: ftp-minified
+        path: minified/ftp-${{ github.ref_name }}-min.js
 
     - name: Commit minified version
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions Bot"
         git checkout -b minified-${{ github.ref_name }}
-        git add minified/fts-${{ github.ref_name }}-min.js
-        git commit -m "build: fts-${{ github.ref_name }}-min.js"
+        git add minified/ftp-${{ github.ref_name }}-min.js
+        git commit -m "build: ftp-${{ github.ref_name }}-min.js"
 
     - name: Merge to main and push
       run: |
