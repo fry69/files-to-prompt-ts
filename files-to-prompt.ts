@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 
-const VERSION = '0.5.0';
+const VERSION = 'v0.5.0';
 
 /**
  * Represents runtime compatibility configuration with various engines.
@@ -532,7 +532,7 @@ function parseCommandLineArgs(args: string[], pathsToProcess: string[], config: 
     const arg = args[i];
     switch (arg) {
       case '--version':
-        output(`files-to-prompt.ts version ${VERSION}`);
+        output(`files-to-prompt.ts ${VERSION}`);
         return false;
       case '--include-hidden':
         config.includeHidden = true;

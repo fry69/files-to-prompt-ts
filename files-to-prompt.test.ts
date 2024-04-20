@@ -314,7 +314,7 @@ describe('files-to-prompt.ts', () => {
 
   test('should output version string when --version is passed', async () => {
     await main(['--version']);
-    expect(stdoutOutput).toContain(`files-to-prompt.ts version`);
+    expect(stdoutOutput).toContain(`files-to-prompt.ts v`);
     expect(stderrOutput).toBeEmpty();
   });
 
