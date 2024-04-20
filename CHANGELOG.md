@@ -1,3 +1,21 @@
+commit 148fce3db6fee549b9302d8be6ec79eb9a1def9a
+Date:   Sat Apr 20 18:23:39 2024 +0200
+
+    Bump version to 0.5.1
+
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+---
+
+commit f99e360adf8482269c94be13d0b77d9e3b9b359a
+Date:   Sat Apr 20 18:22:00 2024 +0200
+
+    doc: rebuild CHANGELOG.md with script for consistency (but adds some typos back in)
+
+ 1 file changed, 167 insertions(+), 9 deletions(-)
+
+---
+
 commit f817a0267afe031b533d3472336440668b3c4a29
 Date:   Sat Apr 20 17:35:56 2024 +0200
 
