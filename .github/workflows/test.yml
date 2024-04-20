@@ -1,0 +1,53 @@
+name: Test
+
+# Run workflow only on tag creation
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+        # Give the default GITHUB_TOKEN write permission to commit and push the
+        # added or changed files to the repository.
+        contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install Bun
+      shell: bash
+      run: |
+        curl -fsSL https://bun.sh/install | bash
+        echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+    - name: Run tests
+      # Exit workflow with error if tests fail
+      run: |
+        set -e
+        bun test
+
+    - name: Update coverage section in README.md
+      run: |
+        chmod +x update_readme.sh
+        ./update_readme.sh ${{ github.ref_name }}
+
+    - name: Commit updated README.md
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions Bot"
+        git checkout -b coverage-${{ github.ref_name }}
+        git add README.md
+        git commit -m "doc: update coverage section for ${{ github.ref_name }}"
+
+    - name: Merge to main and push
+      run: |
+        git checkout main
+        git merge coverage-${{ github.ref_name }}
+        git push
