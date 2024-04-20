@@ -1,0 +1,19 @@
+name: Setup Bun
+
+on:
+  workflow_call:
+
+jobs:
+
+  setup-bun:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install Bun
+      shell: bash
+      run: |
+        curl -fsSL https://bun.sh/install | bash
+        echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+    - name: Verify Bun
+      run: bun --version
