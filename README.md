@@ -18,7 +18,7 @@ This is a TypeScript port of the original `files-to-prompt` tool written in Pyth
 - Extracts the contents of text files and presents them in a formatted way
 - Supports including or excluding hidden files and directories
 - Allows ignoring files based on patterns or .gitignore rules
-- Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown (external/internal parser)
+- Converts Jupyter Notebook (.ipynb) files to ASCII or Markdown
 - Supports redirecting output to a file
 - Runs out-of-box on the Bun runtime environment
 - Compatible with Deno and Node.js (minified)
@@ -62,7 +62,7 @@ The tool accepts the following command-line arguments:
 -i, --ignore <pattern>    Ignore files matching the specified pattern
 -o, --output <file>       Redirect output to the specified file
 --nbconvert <command>     Specify the external nbconvert command to use for .ipynb files
-                          Specify 'internal' for internal parser
+                          Specify 'internal' for fast internal converter
 --format <format>         Specify the format to convert .ipynb files to ('asciidoc' or 'markdown')
 [paths]                   One or more file or directory paths to process
 ```
@@ -82,11 +82,11 @@ By default, the tool outputs the file contents to the console. You can redirect 
 
 If the `--nbconvert` option is provided, the tool will attempt to convert any `.ipynb` (Jupyter Notebook) files to the specified format (`--format asciidoc` or `--format markdown`) using the provided `nbconvert` command name or path. By default `asciidoc` will be used.
 
-Without conversion (or if the provided command cannot be found) `.ipynb` files will get included verbatim in their `JSON` format (including `base64` encoded images etc).
+Without conversion (or if the provided command cannot be found) Notebook files will get included verbatim in their `JSON` format (including `base64` encoded images etc).
 
-Internally each file conversion happens in a freshly created temporary directory (via `mktemp` API), which gets deleted automatically after successful (or unsucessful) completion.
+Each external Notebook conversion happens in a freshly created temporary directory (via `mktemp` API), which gets deleted automatically after successful (or unsucessful) completion.
 
-> **New:** Crazy fast (100x compared to `nbconvert`) internal parser for conversion, use with `--nbconvert internal`
+> **New (v0.5.0):** Crazy fast (100x compared to `nbconvert`) internal converter, use with `--nbconvert internal`
 
 ### Example usage:
 
@@ -120,7 +120,7 @@ This repository includes a comprehensive test script to ensure `files-to-prompt.
 bun test --coverage
 ```
 
-Recent test status (v0.5.0 using nbconvert-shim):
+Recent test status (v0.5.0, using nbconvert-shim):
 
 ```
 bun test v1.1.4 (fbe2fe0c)

@@ -4,7 +4,7 @@
  * nbconvert-shim.ts
  *
  * Helper tool to speed up testing, mimicking `nbconvert`.
- * It creates output files with fixed content for test cases in `files-to-prompt.test.ts`.
+ * Used by `files-to-prompt.test.ts`.
  */
 
 import fs from 'node:fs';
