@@ -1,3 +1,11 @@
+## v0.5.2
+Release v0.5.2
+
+- fix: main now returns a proper promise
+- fix: Bun.sleep() no longer needed in test script
+
+---
+
 ## v0.5.1
 Release v0.5.1
 
