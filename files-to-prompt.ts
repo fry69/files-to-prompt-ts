@@ -186,8 +186,9 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
     }
   } catch (err) {
     // This should not happen unless e.g. files get deleted while this tool runs
-    // I ran into this case as the test framework was cleaning up files before this tool was done
-    // Remove `Bun.sleep()` from the test script and you will end up here
+    // I ran into this case with an earlier version of this script, where main()
+    // was not returning a promise correctly. This lead to the test framework to
+    // cleaning up files before this tool was done processing.
     // TODO: write test case (not trivial)
     error(`Error processing file ${filePath}: ${err}`);
   }
@@ -611,37 +612,17 @@ function parseCommandLineArgs(args: string[], pathsToProcess: string[], config: 
 }
 
 /**
- * The main entry point of the script.
+ * Processes the provided paths recursively.
  * @async
- * @function main
- * @param {string[]} args - The command-line arguments.
- * @returns {Promise<void>}
+ * @function processPathsRecursively
+ * @param {string[]} pathsToProcess - The paths to process.
+ * @param {ProcessingConfig} config - The processing configuration.
+ * @returns {Promise<void>} - A Promise that resolves when all the paths have been processed.
  */
-export async function main( args: string[] ): Promise<void> {
-  const config: ProcessingConfig = {
-    includeHidden: false,
-    ignoreGitignore: false,
-    ignorePatterns: [],
-    gitignoreRules: [],
-    nbconvertName: '',
-    nbconvertFormat: 'asciidoc',
-  };
-  const pathsToProcess: string[] = [];
-
-  const hasError = parseCommandLineArgs(args, pathsToProcess, config, outputConfig);
-
-  if (hasError) {
-    return;
-  }
-
-  // Process input from stdin
-  if ((compatConfig.isNode && !process.stdin.isTTY) ||
-      (compatConfig.isDeno && !Deno.stdin.isTerminal()))  {
-    const stdinData = await readStdin();
-    const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
-    pathsToProcess.push(...filePathsFromStdin);
-  }
-
+async function processPathsRecursively(
+  pathsToProcess: string[],
+  config: ProcessingConfig
+): Promise<void> {
   for (const path of pathsToProcess) {
     if (!fs.existsSync(path)) {
       error(`Path does not exist: ${path}`);
@@ -649,7 +630,52 @@ export async function main( args: string[] ): Promise<void> {
     }
     await processPath(path, config);
   }
-  return;
+}
+
+/**
+ * The main entry point of the script.
+ * @async
+ * @function main
+ * @param {string[]} args - The command-line arguments.
+ * @returns {Promise<void>} - A Promise that resolves when the script has finished processing all the files.
+ */
+export async function main( args: string[] ): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const config: ProcessingConfig = {
+      includeHidden: false,
+      ignoreGitignore: false,
+      ignorePatterns: [],
+      gitignoreRules: [],
+      nbconvertName: '',
+      nbconvertFormat: 'asciidoc',
+    };
+    const pathsToProcess: string[] = [];
+
+    const hasError = parseCommandLineArgs(args, pathsToProcess, config, outputConfig);
+
+    if (hasError) {
+      // reject(new Error('Error parsing command-line arguments'));
+      resolve();
+      return;
+    }
+
+    // Process input from stdin
+    if ((compatConfig.isNode && !process.stdin.isTTY) ||
+        (compatConfig.isDeno && !Deno.stdin.isTerminal()))  {
+      readStdin()
+        .then((stdinData) => {
+          const filePathsFromStdin = parseFilePathsFromStdin(stdinData);
+          pathsToProcess.push(...filePathsFromStdin);
+          return processPathsRecursively(pathsToProcess, config);
+        })
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    } else {
+      processPathsRecursively(pathsToProcess, config)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    }
+  });
 }
 
 // Check if the script is being run directly and detect the runtime environment

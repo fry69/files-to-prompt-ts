@@ -5,11 +5,6 @@ import { describe, beforeEach, afterEach, expect, test, spyOn } from "bun:test";
 import { main, isBinaryFile, parseFilePathsFromStdin } from "./files-to-prompt";
 import * as ftp from "./files-to-prompt";
 
-// Looks like 1ms not enough delay for tests to pass reliably, 5ms seems OK on my M1
-// In doubt, set to 50ms
-// Without this delay the afterEach() hook can run and delete files before the main() call has completed
-const sleepTime = 5;
-
 describe('files-to-prompt.ts', () => {
   const testDir = path.join(__dirname, 'test-data');
   const outDir = path.join(__dirname, 'test-output');
@@ -39,7 +34,6 @@ describe('files-to-prompt.ts', () => {
 
   async function runScript(args: string[]): Promise<void> {
     await main(args);
-    await Bun.sleep(sleepTime); // The joy of asynchrony, tests will fail without sleeping a few ms here
   }
 
   test('should include single file passed on the command line', async () => {
