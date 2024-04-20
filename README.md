@@ -123,64 +123,64 @@ bun test --coverage
 
 ## Test status and Coverage
 
-Recent test status (v0.5.1, using nbconvert-shim):
+Recent test status (v0.5.2, using nbconvert-shim):
 
 ```
 bun test v1.1.4 (fbe2fe0c)
 
 ::group::files-to-prompt.test.ts:
-(pass) files-to-prompt.ts > should include single file passed on the command line [10.93ms]
-(pass) files-to-prompt.ts > should include multiple files passed on the command line [6.25ms]
-(pass) files-to-prompt.ts > should include files in directories passed on the command line [7.14ms]
-(pass) files-to-prompt.ts > should include files a few levels deep in a directory structure [5.87ms]
-(pass) files-to-prompt.ts > should exclude files matching patterns passed via --ignore [6.90ms]
-(pass) files-to-prompt.ts > should exclude files matching patterns passed via multiple --ignore [5.87ms]
-(pass) files-to-prompt.ts > should fail when --ignore gets passed without an argument [5.39ms]
-(pass) files-to-prompt.ts > should exclude files matching patterns in .gitignore [6.09ms]
-(pass) files-to-prompt.ts > should exclude directory matching patterns in .gitignore [6.81ms]
-(pass) files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [5.70ms]
-(pass) files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [7.19ms]
-(pass) files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [6.03ms]
-(pass) files-to-prompt.ts > should skip binary files [6.65ms]
-(pass) files-to-prompt.ts > should fail silently if isBinaryFile() gets called with invalid path [1.04ms]
-(pass) files-to-prompt.ts > should skip FIFOs [9.48ms]
-(pass) files-to-prompt.ts > should fail with error message if path does not exist [5.20ms]
-(pass) files-to-prompt.ts > should parse file paths with parseFilePathsFromStdin() correctly [1.04ms]
-(pass) files-to-prompt.ts > should de-duplicate file paths with parseFilePathsFromStdin() [0.11ms]
+(pass) files-to-prompt.ts > should include single file passed on the command line [5.28ms]
+(pass) files-to-prompt.ts > should include multiple files passed on the command line [1.10ms]
+(pass) files-to-prompt.ts > should include files in directories passed on the command line [0.76ms]
+(pass) files-to-prompt.ts > should include files a few levels deep in a directory structure [0.73ms]
+(pass) files-to-prompt.ts > should exclude files matching patterns passed via --ignore [0.73ms]
+(pass) files-to-prompt.ts > should exclude files matching patterns passed via multiple --ignore [0.63ms]
+(pass) files-to-prompt.ts > should fail when --ignore gets passed without an argument [0.38ms]
+(pass) files-to-prompt.ts > should exclude files matching patterns in .gitignore [0.70ms]
+(pass) files-to-prompt.ts > should exclude directory matching patterns in .gitignore [0.83ms]
+(pass) files-to-prompt.ts > should exclude directory matching patterns in .gitignore in different directories [0.55ms]
+(pass) files-to-prompt.ts > should include hidden files and directories when --include-hidden is passed [0.89ms]
+(pass) files-to-prompt.ts > should ignore .gitignore files when --ignore-gitignore is passed [0.75ms]
+(pass) files-to-prompt.ts > should skip binary files [1.07ms]
+(pass) files-to-prompt.ts > should fail silently if isBinaryFile() gets called with invalid path [0.15ms]
+(pass) files-to-prompt.ts > should skip FIFOs [3.97ms]
+(pass) files-to-prompt.ts > should fail with error message if path does not exist [0.09ms]
+(pass) files-to-prompt.ts > should parse file paths with parseFilePathsFromStdin() correctly [0.22ms]
+(pass) files-to-prompt.ts > should de-duplicate file paths with parseFilePathsFromStdin() [0.07ms]
 (pass) files-to-prompt.ts > should parse file paths with one file path per line [0.09ms]
-(pass) files-to-prompt.ts > should handle mixed input formats [0.08ms]
-(pass) files-to-prompt.ts > should handle empty lines in stdin data [0.05ms]
-(pass) files-to-prompt.ts > should handle binary data in stdin [0.10ms]
+(pass) files-to-prompt.ts > should handle mixed input formats [0.06ms]
+(pass) files-to-prompt.ts > should handle empty lines in stdin data [0.04ms]
+(pass) files-to-prompt.ts > should handle binary data in stdin [0.08ms]
 (pass) files-to-prompt.ts > should handle common text/code files in stdin [0.06ms]
-(pass) files-to-prompt.ts > should handle long file paths in stdin [0.32ms]
-(pass) files-to-prompt.ts > should ignore file paths with the null character [0.08ms]
-(pass) files-to-prompt.ts > should ignore file paths with control characters [0.09ms]
+(pass) files-to-prompt.ts > should handle long file paths in stdin [0.29ms]
+(pass) files-to-prompt.ts > should ignore file paths with the null character [0.06ms]
+(pass) files-to-prompt.ts > should ignore file paths with control characters [0.07ms]
 (pass) files-to-prompt.ts > should output version string when --version is passed [0.09ms]
 (pass) files-to-prompt.ts > should output error for unsupported options [0.07ms]
-(pass) files-to-prompt.ts > should output to a file when --output is passed [5.86ms]
-(pass) files-to-prompt.ts > should output to a file when -o is passed [5.79ms]
-(pass) files-to-prompt.ts > should output error if --output is passed without a file path [6.03ms]
-(pass) files-to-prompt.ts > should output error if -o is passed without a file path [5.32ms]
-(pass) files-to-prompt.ts > should output error if output file cannot be written [5.86ms]
-(pass) files-to-prompt.ts > should include .ipynb files verbatim whitout --nbconvert [6.17ms]
-(pass) files-to-prompt.ts > should include .ipynb files verbatim when --nbconvert is set to invalid command [7.95ms]
-(pass) files-to-prompt.ts > should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed [55.93ms]
-(pass) files-to-prompt.ts > should convert .ipynb files to Markdown when --nbconvert --format markdown is passed [55.10ms]
-(pass) files-to-prompt.ts > should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed using internal converter [5.80ms]
-(pass) files-to-prompt.ts > should convert .ipynb files to Markdown when --nbconvert --format markdown is passed using internal converter [5.62ms]
+(pass) files-to-prompt.ts > should output to a file when --output is passed [1.46ms]
+(pass) files-to-prompt.ts > should output to a file when -o is passed [0.73ms]
+(pass) files-to-prompt.ts > should output error if --output is passed without a file path [0.16ms]
+(pass) files-to-prompt.ts > should output error if -o is passed without a file path [0.14ms]
+(pass) files-to-prompt.ts > should output error if output file cannot be written [0.24ms]
+(pass) files-to-prompt.ts > should include .ipynb files verbatim whitout --nbconvert [0.64ms]
+(pass) files-to-prompt.ts > should include .ipynb files verbatim when --nbconvert is set to invalid command [1.45ms]
+(pass) files-to-prompt.ts > should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed [46.95ms]
+(pass) files-to-prompt.ts > should convert .ipynb files to Markdown when --nbconvert --format markdown is passed [46.59ms]
+(pass) files-to-prompt.ts > should convert .ipynb files to ASCII when --nbconvert --format asciidoc is passed using internal converter [0.60ms]
+(pass) files-to-prompt.ts > should convert .ipynb files to Markdown when --nbconvert --format markdown is passed using internal converter [0.85ms]
 
 ::endgroup::
 --------------------|---------|---------|-------------------
 File                | % Funcs | % Lines | Uncovered Line #s
 --------------------|---------|---------|-------------------
-All files           |   91.18 |   85.84 |
- files-to-prompt.ts |   91.18 |   85.84 | 69,82,97,108-111,137,187,220,239-241,248-249,271-273,279-280,307-308,324,449-460,573-574,591-592,595-596,640-642,660-663,665-666
+All files           |   83.33 |   85.25 |
+ files-to-prompt.ts |   83.33 |   85.25 | 69,82,97,108-111,137,187,221,240-242,249-250,272-274,280-281,308-309,325,450-461,574-575,592-593,596-597,665-668,670-672,686-689,691-692
 --------------------|---------|---------|-------------------
 
  39 pass
  0 fail
  95 expect() calls
-Ran 39 tests across 1 files. [303.00ms]
+Ran 39 tests across 1 files. [150.00ms]
 ```
 
 ## Compatibility
