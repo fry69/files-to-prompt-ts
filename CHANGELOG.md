@@ -1,3 +1,120 @@
+commit f817a0267afe031b533d3472336440668b3c4a29
+Date:   Sat Apr 20 17:35:56 2024 +0200
+
+    chore: add test workflow with automated result update in README.md
+
+ 1 file changed, 53 insertions(+)
+
+---
+
+commit cb098c017125f29b6afff479e47065e3aeca90b1
+Date:   Sat Apr 20 17:21:08 2024 +0200
+
+    chore: add script to update README.md automatically with test coverage results
+
+ 1 file changed, 33 insertions(+)
+
+---
+
+commit 4e44e614c968ef38838ed410aeb0a540e6743c10
+Date:   Sat Apr 20 17:18:38 2024 +0200
+
+    fix: more consistent version string
+
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+---
+
+commit b8d37993a6368f7f3652f999136c2ed3921f58d9
+Date:   Sat Apr 20 16:03:56 2024 +0200
+
+    doc: prepare README.md for auto generate test status
+
+ 1 file changed, 2 insertions(+)
+
+---
+
+commit fe95babaf147e95f542af84c04f1eb3f3a61a0f5
+Date:   Sat Apr 20 16:01:25 2024 +0200
+
+    doc: update README.md
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 3f5f3f73cb4014f67ac6d22c7e0944a356bc93f5
+Date:   Sat Apr 20 15:59:23 2024 +0200
+
+    chore: fix build workflow script
+
+ 2 files changed, 21 insertions(+), 24 deletions(-)
+
+---
+
+commit cfc7c222ea7596c082a8ccc97aa492602b6ebf7f
+Date:   Sat Apr 20 11:48:46 2024 +0200
+
+    chore: add release worflow to automatically build minified script
+
+ 2 files changed, 53 insertions(+)
+
+---
+
+commit ab84532ab8946d677901b3a1342299078a836145
+Date:   Sat Apr 20 12:41:49 2024 +0200
+
+    doc: add code scan badge
+
+ 1 file changed, 1 insertion(+)
+
+---
+
+commit 0db5ca94f2c49fd88587def560e33460592b64cd
+Date:   Sat Apr 20 09:57:42 2024 +0200
+
+    doc: some wording and polish
+
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+---
+
+commit 4b7ffc87a4049741c2766b0f8abf0c342099fc1d
+Date:   Sat Apr 20 12:27:16 2024 +0200
+
+    doc: Create SECURITY.md
+
+ 1 file changed, 15 insertions(+)
+
+---
+
+commit 099c2574d3178e57db7f17406967e866d65e999e
+Date:   Fri Apr 19 22:29:15 2024 +0200
+
+    chore: refactor command-line parser to own function, JSDoc fixes
+
+ 1 file changed, 60 insertions(+), 40 deletions(-)
+
+---
+
+commit ed7f8caca5d8bee92a24b3f50699db520d12d8b1
+Date:   Fri Apr 19 21:16:25 2024 +0200
+
+    doc: add missing JSDoc comments
+
+ 1 file changed, 29 insertions(+), 1 deletion(-)
+
+---
+
+commit 821ad421c926477ef5efc9995cc7bb88f856d217
+Date:   Fri Apr 19 17:37:40 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 72 insertions(+)
+
+---
+
 commit 45e4c7980a8a6041120b55f66600a1f5022d6873
 Date:   Fri Apr 19 17:35:32 2024 +0200
 
@@ -67,6 +184,15 @@ Date:   Fri Apr 19 11:28:00 2024 +0200
     doc: fix minified link in README.md
 
  1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+
+commit 2abb076488a3d702751e70bc7d3c17dd2abd6d97
+Date:   Fri Apr 19 11:20:50 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 80 insertions(+)
 
 ---
 
@@ -150,6 +276,15 @@ Date:   Thu Apr 18 21:54:15 2024 +0200
 
 ---
 
+commit daa3cd62cc9219f75d118d3e88ddcd57baf53e9a
+Date:   Thu Apr 18 18:08:05 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 63 insertions(+)
+
+---
+
 commit 4d465ca6055db3efaa1930b2c56ecc84f7c5943c
 Date:   Thu Apr 18 18:06:36 2024 +0200
 
@@ -226,7 +361,7 @@ commit 438afe1b351fcf748d171821b7a9a19d0d9ac0ee
 Date:   Thu Apr 18 15:32:05 2024 +0200
 
     fix: check and ignore --nbconvert if command is not found
-
+    
     - additional test cases
 
  3 files changed, 73 insertions(+), 39 deletions(-)
@@ -393,7 +528,7 @@ Date:   Wed Apr 17 19:36:41 2024 +0200
 
  2 files changed, 14 insertions(+), 1 deletion(-)
 
---
+---
 
 commit bf4e83c9483097f58b4fa792f22392d5b3e8cad7
 Date:   Wed Apr 17 19:26:50 2024 +0200
@@ -489,6 +624,15 @@ Date:   Wed Apr 17 14:56:12 2024 +0200
 
 ---
 
+commit f75e54a5264f7eebdf1b874545241f98a7577d8e
+Date:   Wed Apr 17 12:42:38 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 27 insertions(+)
+
+---
+
 commit d92aa0ca090c5042af578111fe0d2518aab68360
 Date:   Wed Apr 17 12:41:25 2024 +0200
 
@@ -513,6 +657,15 @@ Date:   Wed Apr 17 12:36:15 2024 +0200
     Tiny polish
 
  1 file changed, 2 insertions(+), 2 deletions(-)
+
+---
+
+commit 373e22760b1adb837b38499b55ea0ebf92d6d31a
+Date:   Wed Apr 17 12:12:56 2024 +0200
+
+    Update changelog
+
+ 1 file changed, 9 insertions(+)
 
 ---
 
@@ -548,8 +701,6 @@ Date:   Wed Apr 17 11:30:59 2024 +0200
 
     Bump jsr version to 0.1.4
 
-    - removed npm install run from worklow as the script is now dependency free
-
  2 files changed, 2 insertions(+), 3 deletions(-)
 
 ---
@@ -558,7 +709,7 @@ commit cd3b8ce37deff2130c39a6b8aa90c71371869a3a
 Date:   Wed Apr 17 11:17:29 2024 +0200
 
     Refactor argument parsing
-
+    
     - removed dependency on commander, replaced by a simple switch parser
     - added Deno compatibility
     - refactored isBinaryFile again to make it compatible with Deno
@@ -747,6 +898,15 @@ Date:   Tue Apr 16 17:41:39 2024 +0200
 
 ---
 
+commit 4b9bb5a6990fada982c430d23bed5f39bdcb483b
+Date:   Tue Apr 16 17:03:38 2024 +0200
+
+    Add basic changelog based on git log --shortstats
+
+ 1 file changed, 205 insertions(+)
+
+---
+
 commit 3d29134ff859a52bf2bc24b91166136500969edd
 Date:   Tue Apr 16 14:55:01 2024 +0200
 
@@ -759,7 +919,7 @@ Date:   Tue Apr 16 14:55:01 2024 +0200
 commit 1c5ea81dacc7ff178e4e8d44f2f6cb06826311ed
 Date:   Tue Apr 16 14:52:19 2024 +0200
 
-    Switch to mock based testing instead of child_process
+    Switch to mochking based testing instead of child_process
 
  2 files changed, 146 insertions(+), 83 deletions(-)
 
@@ -866,8 +1026,6 @@ Date:   Mon Apr 15 16:48:59 2024 +0200
 commit 409f646db875f395eec17cb7a407161c0b434568
 Date:   Mon Apr 15 16:42:53 2024 +0200
 
----
-
     Add MIT license file
 
  1 file changed, 21 insertions(+)
@@ -929,7 +1087,7 @@ Date:   Mon Apr 15 15:17:25 2024 +0200
 commit 79bae42ee54f71e2f48bd1964c28cd7c19180ee8
 Date:   Mon Apr 15 15:16:33 2024 +0200
 
-    Add new file 'files-to-prompt.test.js' with tests for 'files-to-prompt.ts'
+    Add new file 'files-to-prompt-test.js' with tests for 'files-to-prompt.ts'
 
  1 file changed, 115 insertions(+)
 
