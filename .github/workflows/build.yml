@@ -9,11 +9,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+        # Give the default GITHUB_TOKEN write permission to commit and push the
+        # added or changed files to the repository.
+        contents: write
+
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-    - name: Setup Bun
-      uses: ./.github/workflows/setup-bun.yml
+    - name: Install Bun
+      shell: bash
+      run: |
+        curl -fsSL https://bun.sh/install | bash
+        echo "$HOME/.bun/bin" >> $GITHUB_PATH
 
     - name: Build minified version
       run: |
@@ -27,8 +37,14 @@ jobs:
 
     - name: Commit minified version
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions Bot"
+        git checkout -b minified-${{ github.ref_name }}
         git add minified/fts-${{ github.ref_name }}-min.js
-        git commit -m "Add minified version: fts-${{ github.ref_name }}-min.js"
+        git commit -m "build: fts-${{ github.ref_name }}-min.js"
+
+    - name: Merge to main and push
+      run: |
+        git checkout main
+        git merge minified-${{ github.ref_name }}
         git push
