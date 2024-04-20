@@ -39,11 +39,11 @@ bun run files-to-prompt.ts [options] [paths]
 Alternatively you can download the script directly:
 - from jsr.io:
 ```shell
-curl https://jsr.io/@fry69/files-to-prompt-ts/0.5.1/files-to-prompt.ts > ftp.ts
+curl https://jsr.io/@fry69/files-to-prompt-ts/0.5.2/files-to-prompt.ts > ftp.ts
 ```
 - from GitHub:
 ```shell
-curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.5.1/files-to-prompt.ts > ftp.ts
+curl https://raw.githubusercontent.com/fry69/files-to-prompt-ts/v0.5.2/files-to-prompt.ts > ftp.ts
 ```
 
 Don't forget to make the script executable with `chmod +x ftp.ts` and move it to a location where it is accessible from your system's `$PATH` (optional).

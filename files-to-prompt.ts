@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 
-const VERSION = 'v0.5.1';
+const VERSION = 'v0.5.2';
 
 /**
  * Represents runtime compatibility configuration with various engines.
