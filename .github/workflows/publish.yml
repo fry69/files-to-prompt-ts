@@ -10,9 +10,26 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       id-token: write # The OIDC ID token is used for authentication with JSR.
+
     steps:
       - uses: actions/checkout@v4
-      - run: npx jsr publish --allow-dirty
+        with:
+            fetch-depth: 0
+
+      - name: Check if jsr.json has changed
+        id: jsr_changed
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q 'jsr.json'; then
+            echo "jsr_json_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "jsr_json_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to JSR
+        if: steps.jsr_changed.outputs.jsr_json_changed == 'true'
+        run: |
+          npx jsr publish --allow-dirty
