@@ -654,7 +654,7 @@ export async function main( args: string[] ): Promise<void> {
     const hasError = parseCommandLineArgs(args, pathsToProcess, config, outputConfig);
 
     if (hasError) {
-      // reject(new Error('Error parsing command-line arguments'));
+      // Quit silently before processing further
       resolve();
       return;
     }
@@ -678,9 +678,9 @@ export async function main( args: string[] ): Promise<void> {
   });
 }
 
-// Check if the script is being run directly and detect the runtime environment
-// main() may not be called here when this script gets imported in the test script
-// call the main function with the appropriate arguments
+// Check if the script is being run directly and detect the runtime environment,
+// then call main() with appropriate arguments.
+// Note: main() may not be called from here when this script gets imported in test script
 // TODO: write test case (not trivial)
 if (import.meta.main || (process.argv[1] === fileURLToPath(import.meta.url))) {
   if (typeof Deno !== 'undefined') {
