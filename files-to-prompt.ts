@@ -198,7 +198,7 @@ async function processFile(filePath: string, config: ProcessingConfig): Promise<
  * Converts a Jupyter Notebook file to the specified format using internal conversion.
  * @async
  * @function convertNotebookInternal
- * @param {string} filePath - The path to the IPython Notebook file.
+ * @param {string} filePath - The path to the Jupyter Notebook file.
  * @param {ProcessingConfig} config - The processing configuration.
  * @returns {Promise<void>}
  */
@@ -224,9 +224,9 @@ async function convertNotebookInternal(filePath: string, config: ProcessingConfi
 }
 
 /**
- * Converts a Jupyter Notebook file to AsciiDoc format.
+ * Converts Jupyter Notebook JSON to AsciiDoc format.
  * @function convertToAsciidoc
- * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
+ * @param {any} ipynbData - The parsed JSON data of the Jupyter Notebook file.
  * @returns {string} - The AsciiDoc content.
  */
 function convertToAsciidoc(ipynbData: any): string {
@@ -256,9 +256,9 @@ function convertToAsciidoc(ipynbData: any): string {
 }
 
 /**
- * Converts a Jupyter Notebook file to Markdown format.
+ * Converts Jupyter Notebook JSON to Markdown format.
  * @function convertToMarkdown
- * @param {any} ipynbData - The parsed JSON data of the IPython Notebook file.
+ * @param {any} ipynbData - The parsed JSON data of the Jupyter Notebook file.
  * @returns {string} - The Markdown content.
  */
 function convertToMarkdown(ipynbData: any): string {
@@ -289,7 +289,7 @@ function convertToMarkdown(ipynbData: any): string {
  * Converts a Jupyter Notebook file to the specified format using external conversion.
  * @async
  * @function convertIPythonNotebookExternal
- * @param {string} filePath - The path to the IPython Notebook file.
+ * @param {string} filePath - The path to the Jupyter Notebook file.
  * @param {ProcessingConfig} config - The processing configuration.
  * @returns {Promise<void>}
  */
